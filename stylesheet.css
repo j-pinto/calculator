@@ -1,0 +1,60 @@
+#container
+{
+    display: grid;
+    height: 700px;
+    width: 400px;
+
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(7, 1fr);
+
+    column-gap: 5px;
+    row-gap: 5px;
+}
+
+#display
+{
+    grid-column: 1 / span 4;
+
+    border-width: 3px;
+    border-style: solid;
+    border-color: lightgrey;
+
+    display: grid;
+    align-items: flex-end;
+    justify-items: right;
+}
+
+#zero
+{
+    grid-column: 1 / span 2;
+    grid-row: 6;
+}
+
+.button
+{
+    display: grid;
+    align-items: center;
+    justify-items: center;
+}
+
+.num
+{
+    background-color: lightgray;
+}
+
+.op
+{
+    background-color: lightskyblue;
+}
+
+#clear, #delete
+{
+    background-color: lightpink;
+}
+
+#equals
+{
+    background-color: lightseagreen;
+}
+
+
