@@ -1,8 +1,6 @@
-let numString = "0"; //numString always resets back to "0"
+let numString = "0";
 
-//these help track what is or is not a valid next input
-//for example we dont want to allow two operators or two decimal points consecutively
-//dont want to be able to press EQUALS right after operator or decimal point
+//booleans help track what is or is not a valid next input
 let decimalLimit = false;
 let isDecimalEntry = false; 
 let isOpEntry = false;
@@ -11,7 +9,7 @@ let error = false;
 
 let inputArray = []; // contains list of nums and operators to be executed on EQUALS press
 
-let displayString = "0"; //only resets to "0" after CLEAR press, otherwise shows Ans from previous execution
+let displayString = "0";
 document.getElementById("display").innerHTML = displayString;
 
 //array with the operator names, HARD-CODED IN PROPER ORDER OF OPERATIONS
@@ -19,23 +17,23 @@ const opNames = ['multiply', 'divide', 'add', 'subtract']
 
 inputAccept(execute);
 
-function inputAccept(callback) //TODO: add callback, add displayString manipulation
+function inputAccept(callback)
 {
     const calcContainer = document.querySelector("#container");
     calcContainer.addEventListener('click', function(e)
     {
-        if (numString == "0" && e.target.getAttribute("data-type") == "num") //what to do if starting new num input
+        if (numString == "0" && e.target.getAttribute("data-type") == "num")
         {
             isOpEntry = false;
             isDecimalEntry = false;
 
-            numString = e.target.innerHTML; //existing zero gets replaced on first num input, dont allow multiple 0's w/o decimal
+            numString = e.target.innerHTML; 
             inputArray.length == 0 ? (displayString = numString) : (displayString += numString);
             document.getElementById("display").innerHTML = displayString;
         }
-        else if (e.target.getAttribute("data-type") == "num") //concatenate num inputs until op or equals is pressed  
+        else if (e.target.getAttribute("data-type") == "num") 
         {
-            if (usingPreviousAnswer)//if entering num after Ans is returned, discard Ans
+            if (usingPreviousAnswer)
             {
                 usingPreviousAnswer = false;
                 numString = e.target.innerHTML;
@@ -51,7 +49,7 @@ function inputAccept(callback) //TODO: add callback, add displayString manipulat
             }
             document.getElementById("display").innerHTML = displayString;
         }
-        else if (e.target.getAttribute("id") == "decimal" && !decimalLimit) //dont allow multiple decimal points in a number
+        else if (e.target.getAttribute("id") == "decimal" && !decimalLimit)
         {
             isDecimalEntry = true;
             decimalLimit = true;
@@ -70,19 +68,19 @@ function inputAccept(callback) //TODO: add callback, add displayString manipulat
             }
             document.getElementById("display").innerHTML = displayString;
         }
-        else if (e.target.getAttribute("data-type") == "op" && !isOpEntry && !isDecimalEntry) //only allow one op entry before next number
+        else if (e.target.getAttribute("data-type") == "op" && !isOpEntry && !isDecimalEntry)
         {
             isOpEntry = true;
             isDecimalEntry = false;
             usingPreviousAnswer = false;
             if (error) {displayString = numString;}
             error = false;
-            displayString += (" " + e.target.innerHTML + " "); //display ops with suurounding spaces
+            displayString += (" " + e.target.innerHTML + " ");
             document.getElementById("display").innerHTML = displayString;
 
             inputRecord(e.target.id);
         }
-        else if (e.target.getAttribute("id") == "equals" && !isOpEntry && !isDecimalEntry) //dont allow EQUALS right after op or decimal point
+        else if (e.target.getAttribute("id") == "equals" && !isOpEntry && !isDecimalEntry)
         {
             usingPreviousAnswer = false;
             inputRecord();
@@ -94,34 +92,26 @@ function inputAccept(callback) //TODO: add callback, add displayString manipulat
         }
         else if(e.target.getAttribute("id") == "delete")
         {
-            //TODO: delete function
+            backspace();
         }
-        else if(e.target.getAttribute("id") == "negate")
+        else if(e.target.getAttribute("id") == "negate" && !isOpEntry && !isDecimalEntry && !error)
         {
-            //TODO: negate function
+            numString = `${-1 * Number(numString)}`
+            displayString = numString;
+            document.getElementById("display").innerHTML = displayString;
         }
-
-        //console.log("inputAccept | numString", numString);
-        //console.log("inputAccept | displayString", displayString);
-        //console.log("inputAccept | inputArray", inputArray);
-        //console.log("inputAccept | numString", numString);
-        //console.log("inputAccept | decimalLimit", decimalLimit);
-        //console.log("inputAccept | isDecimalEntry", isDecimalEntry);
-        //console.log("inputAccept | isOpEntry", isOpEntry);
-        //console.log("inputAccept | usingPreviousAnswer", usingPreviousAnswer); 
     });
 }
 
 function inputRecord(opID)
 {
-    //console.log("inputRecord | numString at start", numString);
     inputArray.push(Number(numString));
 
     numString = "0";
     decimalLimit = false;
     isDecimalEntry = false; 
 
-    if (opID) //do not reset isOpEntry unless triggered by EQUALS press
+    if (opID)
     {
         inputArray.push(opID);
     }
@@ -129,21 +119,12 @@ function inputRecord(opID)
     {
         isOpEntry = false;
     } 
-    //console.log("inputRecord | numString at finish", numString);
-    //console.log("inputRecord | displayString", displayString);
-    //console.log("inputRecord | inputArray", inputArray);
-    //console.log("inputRecord | numString", numString);
-    //console.log("inputRecord | decimalLimit", decimalLimit);
-    //console.log("inputRecord | isDecimalEntry", isDecimalEntry);
-    //console.log("inputRecord | isOpEntry", isOpEntry);
-    //console.log("inputRecord | usingPreviousAnswer", usingPreviousAnswer); 
 
     return;
 }
 
 function execute()
 {
-    //loop through opNames, execute every op of that type from inputArray, move to next opName
     for (let i = 0; i < opNames.length; i++)
     {
         while (inputArray.indexOf(opNames[i]) != -1)
@@ -169,15 +150,6 @@ function execute()
 
     usingPreviousAnswer = true;
     error = false;
-
-    //console.log("execute | numString", numString);
-    //console.log("execute | displayString", displayString);
-    //console.log("execute | inputArray", inputArray);
-    //console.log("execute | numString", numString);
-    //console.log("execute | decimalLimit", decimalLimit);
-    //console.log("execute | isDecimalEntry", isDecimalEntry);
-    //console.log("execute | isOpEntry", isOpEntry);
-    //console.log("execute | usingPreviousAnswer", usingPreviousAnswer); 
 }
 
 function operate(num1, num2, operator)
@@ -210,8 +182,51 @@ function operate(num1, num2, operator)
         }
     }
 
-    //console.log("operate function", result);
     return result;
+}
+
+function backspace()
+{
+    usingPreviousAnswer = false;
+
+    if (isOpEntry)
+    {
+        isOpEntry = false;
+        displayString = displayString.slice(0, -3);
+        inputArray.pop();
+
+        if (inputArray.length >= 1)
+        {
+            numString = inputArray.pop();
+        }
+        else
+        {
+            numString = "0"
+        }
+        document.getElementById("display").innerHTML = displayString;
+    }
+    else if (displayString.length == 1)
+    {
+        numString = "0";
+        displayString = "0";
+        document.getElementById("display").innerHTML = displayString;
+    }
+    else 
+    {
+        numString = numString.slice(0, -1);
+        displayString = displayString.slice(0, -1);
+        document.getElementById("display").innerHTML = displayString;
+
+        if (displayString.slice(-1) == ".")
+        {
+            isDecimalEntry = true;
+            decimalLimit = true;
+        }
+        else if (displayString.slice(-1) == " ")
+        {
+            isOpEntry = true;
+        }
+    }
 }
 
 function clearAll()
@@ -226,15 +241,6 @@ function clearAll()
 
     displayString = "0";
     document.getElementById("display").innerHTML = displayString;
-
-    //console.log("clearAll | numString", numString);
-    //console.log("clearAll | displayString", displayString);
-    //console.log("clearAll | inputArray", inputArray);
-    //console.log("clearAll | numString", numString);
-    //console.log("clearAll | decimalLimit", decimalLimit);
-    //console.log("clearAll | isDecimalEntry", isDecimalEntry);
-    //console.log("clearAll | isOpEntry", isOpEntry);
-    //console.log("clearAll | usingPreviousAnswer", usingPreviousAnswer);
 
     return;
 }
