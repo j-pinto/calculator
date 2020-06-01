@@ -37,12 +37,12 @@
     justify-items: center;
 }
 
-.num
+div[data-type="num"], #decimal
 {
     background-color: lightgray;
 }
 
-.op
+div[data-type="op"], #negate
 {
     background-color: lightskyblue;
 }
