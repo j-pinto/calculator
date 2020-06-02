@@ -1,4 +1,9 @@
 let numString = "0";
+let displayString = "0";
+document.getElementById("display").innerHTML = displayString;
+
+// contains list of nums and operators to be executed on "equals" press
+let inputArray = [];
 
 //booleans help track what is or is not a valid next input
 let decimalLimit = false;
@@ -6,11 +11,6 @@ let isDecimalEntry = false;
 let isOpEntry = false;
 let usingPreviousAnswer = false;
 let error = false;
-
-let inputArray = []; // contains list of nums and operators to be executed on EQUALS press
-
-let displayString = "0";
-document.getElementById("display").innerHTML = displayString;
 
 //array with the operator names, HARD-CODED IN PROPER ORDER OF OPERATIONS
 const opNames = ['multiply', 'divide', 'add', 'subtract']
@@ -22,67 +22,20 @@ function inputAccept(callback)
     const calcContainer = document.querySelector("#container");
     calcContainer.addEventListener('click', function(e)
     {
-        if (numString == "0" && e.target.getAttribute("data-type") == "num")
+        if (e.target.getAttribute("data-type") == "num")
         {
-            isOpEntry = false;
-            isDecimalEntry = false;
-
-            numString = e.target.innerHTML; 
-            inputArray.length == 0 ? (displayString = numString) : (displayString += numString);
-            document.getElementById("display").innerHTML = displayString;
-        }
-        else if (e.target.getAttribute("data-type") == "num") 
-        {
-            if (usingPreviousAnswer)
-            {
-                usingPreviousAnswer = false;
-                numString = e.target.innerHTML;
-                displayString = numString;
-            }
-            else
-            {
-                isOpEntry = false;
-                isDecimalEntry = false;
-                numString += e.target.innerHTML;
-                error ? (displayString = numString) : (displayString += e.target.innerHTML);
-                error = false;
-            }
-            document.getElementById("display").innerHTML = displayString;
+            numberInput(e.target);
         }
         else if (e.target.getAttribute("id") == "decimal" && !decimalLimit)
         {
-            isDecimalEntry = true;
-            decimalLimit = true;
-
-            if (usingPreviousAnswer)
-            {
-                usingPreviousAnswer = false;
-                numString = ("0" + e.target.innerHTML);
-                displayString = numString;
-            }
-            else
-            {
-                numString += e.target.innerHTML;
-                error ? (displayString = numString) : (displayString += e.target.innerHTML);
-                error = false;
-            }
-            document.getElementById("display").innerHTML = displayString;
+            decimalInput(e.target);
         }
         else if (e.target.getAttribute("data-type") == "op" && !isOpEntry && !isDecimalEntry)
         {
-            isOpEntry = true;
-            isDecimalEntry = false;
-            usingPreviousAnswer = false;
-            if (error) {displayString = numString;}
-            error = false;
-            displayString += (" " + e.target.innerHTML + " ");
-            document.getElementById("display").innerHTML = displayString;
-
-            inputRecord(e.target.id);
+            operatorInput(e.target, inputRecord);
         }
         else if (e.target.getAttribute("id") == "equals" && !isOpEntry && !isDecimalEntry)
         {
-            usingPreviousAnswer = false;
             inputRecord();
             callback(); //callback is the execute function
         }
@@ -90,17 +43,78 @@ function inputAccept(callback)
         {
             clearAll();
         }
-        else if(e.target.getAttribute("id") == "delete")
+        else if(e.target.getAttribute("id") == "delete" && !error)
         {
             backspace();
         }
         else if(e.target.getAttribute("id") == "negate" && !isOpEntry && !isDecimalEntry && !error)
         {
-            numString = `${-1 * Number(numString)}`
-            displayString = numString;
-            document.getElementById("display").innerHTML = displayString;
+            negateNum();
         }
     });
+}
+
+function numberInput(target)
+{
+    if (isOpEntry || error || usingPreviousAnswer || numString === "0")
+    {
+        numString = target.innerHTML;
+        console.log("after num input num", numString);
+        isOpEntry ? displayString += numString : displayString = numString;
+    }
+    else
+    {
+        numString += target.innerHTML;
+        console.log("after num input num", numString);
+        displayString += target.innerHTML;
+    }
+
+    document.getElementById("display").innerHTML = displayString;
+    error = false;
+    isOpEntry = false;
+    isDecimalEntry = false;
+    usingPreviousAnswer = false;
+}
+
+function decimalInput(target)
+{
+    isDecimalEntry = true;
+    decimalLimit = true;
+    isOpEntry = false;
+
+    if (usingPreviousAnswer)
+    {
+        usingPreviousAnswer = false;
+        numString = ("0" + target.innerHTML);
+        displayString = numString;
+    }
+    else
+    {
+        if (displayString.slice(-1) == " ") 
+        {
+            console.log("added zero to display");
+            displayString += "0"; 
+        }
+
+        numString += target.innerHTML;
+        console.log("after dec input num", numString);
+        error ? (displayString = numString) : (displayString += target.innerHTML);
+        error = false;
+    }
+    document.getElementById("display").innerHTML = displayString;
+}
+
+function operatorInput(target, callback)
+{
+    isOpEntry = true;
+    isDecimalEntry = false;
+    usingPreviousAnswer = false;
+    if (error) {displayString = numString;}
+    error = false;
+    displayString += (" " + target.innerHTML + " ");
+    document.getElementById("display").innerHTML = displayString;
+
+    callback(target.id); //callback function is inputRecord
 }
 
 function inputRecord(opID)
@@ -109,7 +123,8 @@ function inputRecord(opID)
 
     numString = "0";
     decimalLimit = false;
-    isDecimalEntry = false; 
+    isDecimalEntry = false;
+    usingPreviousAnswer = false;
 
     if (opID)
     {
@@ -185,6 +200,16 @@ function operate(num1, num2, operator)
     return result;
 }
 
+function negateNum()
+{
+    let match = displayString.search(`${numString}`);
+    displayString = displayString.slice(0, match);
+
+    numString = `${-1 * Number(numString)}`
+    displayString += numString;
+    document.getElementById("display").innerHTML = displayString;
+}
+
 function backspace()
 {
     usingPreviousAnswer = false;
@@ -192,7 +217,6 @@ function backspace()
     if (isOpEntry)
     {
         isOpEntry = false;
-        displayString = displayString.slice(0, -3);
         inputArray.pop();
 
         if (inputArray.length >= 1)
@@ -203,6 +227,8 @@ function backspace()
         {
             numString = "0"
         }
+
+        displayString = displayString.slice(0, -3);
         document.getElementById("display").innerHTML = displayString;
     }
     else if (displayString.length == 1)
