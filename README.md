@@ -16,6 +16,7 @@
 ### Design
 * Layout and animations inpired by built-in calculator app on macOS and iOS, but with a different color palette.
 * Buttons animated with flash effect when clicked or when corresponding keyboard key is pressed. The four main operator keys remain highlighted to show which operator was selected.
+* Calculator stays centered at top of page regardless of browser window re-sizing.
 
 ## Learnings
 * Learnings included but not limited to: CSS grid and keyframe animations; Javascript array methods, number methods, and callback functions; debugging in browser developer tools.
