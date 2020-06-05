@@ -1,5 +1,11 @@
+#body
+{
+    background-color: rgb(31, 31, 31);
+}
+
 #container
 {
+    margin: auto;
     display: grid;
     height: 700px;
     width: 400px;
@@ -9,6 +15,8 @@
 
     column-gap: 5px;
     row-gap: 5px;
+
+    font-family: monospace;
 }
 
 #display
@@ -22,6 +30,9 @@
     display: grid;
     align-items: flex-end;
     justify-items: right;
+
+    color: white;
+    font-size: 35px;
 }
 
 #zero
@@ -35,6 +46,9 @@
     display: grid;
     align-items: center;
     justify-items: center;
+
+    color: white;
+    font-size: 20px;
 }
 
 .flash
@@ -45,50 +59,51 @@
 }
 @keyframes button-flash
 {
-    0% {background-color: rgba(211, 211, 211, 0);}
-    50% {background-color: rgba(211, 211, 211, 0.5);}
-    100% {background-color: rgba(211, 211, 211, 1);}
+    0% {background-color: rgba(128, 128, 128, 0);}
+    50% {background-color: rgba(128, 128, 128, 0.5);}
+    100% {background-color: rgba(128, 128, 128, 1);}
 }
 
 div[data-type="num"], #decimal
 {
-    background-color: rgba(211, 211, 211, 1);
+    background-color: grey;
 }
 
 .op
 {
-    background-color: rgb(135, 206, 250);
+    background-color: rgb(180, 106, 180);
     animation-name: de-highlight; 
     animation-duration: 300ms;
 }
 @keyframes de-highlight
 {
     0% {background-color: white;}
-    50% {background-color: rgb(185, 230, 253);}
-    100% {background-color: rgb(135, 206, 250);}
+    50% {background-color: rgb(210, 180, 210);}
+    100% {background-color: rgb(180, 106, 180);}
 }
 
 .highlight
 {
     background-color: white;
+    color: rgb(180, 106, 180);
     animation-name: button-highlight; 
     animation-duration: 300ms;
 }
 @keyframes button-highlight
 {
-    0% {background-color: rgb(135, 206, 250);}
-    50% {background-color: rgb(185, 230, 253);}
-    100% {background-color: white;}
+    0% {background-color: rgb(180, 106, 180);}
+    50% {background-color: rgb(210, 180, 210);}
+    100% {background-color: white; color: rgb(180, 106, 180)}
 }
 
 #negate, #percent
 {
-    background-color: lightskyblue;
+    background-color: rgb(180, 106, 180);
 }
 
 #clear
 {
-    background-color: lightpink;
+    background-color: rgb(224, 169, 66);
 }
 
 #equals

@@ -25,6 +25,10 @@ const decimalDigitLimit = 8;
 //array with the operator names, IN PROPER ORDER OF OPERATIONS
 const opNames = ['multiply', 'divide', 'add', 'subtract']
 
+//for result formatting
+const resultMin = 0.00000001;
+const resultMax = 100000000;
+
 mouseListen(execute);
 keyboardListen(execute);
 
@@ -133,7 +137,7 @@ function mouseListen(callback)
             if (usedCE) {clearAll();}
             else {clearEntry();}
 
-            if (isOpEntry) {highlightRemove();}
+            highlightRemove();
             flash(e.target);
         }
         else if(e.target.getAttribute("id") == "negate" && !isOpEntry && !isDecimalEntry && !error)
@@ -230,6 +234,8 @@ function numberRecord()
     numArray.push(Number(numString));
     numString = "0";
     //console.log(numArray);
+    isAlreadyDecimal = false;
+    isDecimalEntry = false;
     usedCE = false;
 }
 
@@ -239,7 +245,8 @@ function operatorRecord()
     opArray.push(opString);
     opString = "";
     //console.log(opArray);
-
+    isAlreadyDecimal = false;
+    isDecimalEntry = false;
     usedCE = false;
 }
 
@@ -275,6 +282,8 @@ function execute()
     numString = `${numArray[0]}`;
     document.getElementById("display").innerHTML = numString;
 
+    isDecimalEntry = false;
+    isAlreadyDecimal = false;
     usingPreviousAnswer = true;
     usedCE = true;
 }
@@ -307,6 +316,15 @@ function operate(num1, num2, operator)
         {
             result = (num1 / num2);
         }
+    }
+
+    if (result < resultMin || result > resultMax)
+    {
+        result = result.toExponential(2);
+    }
+    else
+    {
+        result = Number(result.toFixed(8));
     }
 
     return result;
@@ -345,6 +363,8 @@ function clearEntry()
         document.getElementById("display").innerHTML = numString;
     }
 
+    isDecimalEntry = false;
+    isAlreadyDecimal = false;
     usedCE = true;
     alreadyClearedAll = false;
 }
@@ -378,8 +398,19 @@ function repeatLast(callback)
 
 function negateNum()
 {
+    if (usingPreviousAnswer)
+    {
+        numArray.pop();
+        usingPreviousAnswer = false;
+    }
+
     numString = `${-1 * Number(numString)}`
     document.getElementById("display").innerHTML = numString;
+
+    error = false;
+    isOpEntry = false;
+    usingPreviousAnswer = false;
+    usedCE = false;
 }
 
 function percent()
