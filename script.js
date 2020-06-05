@@ -1,23 +1,94 @@
 let numString = "0";
-let displayString = "0";
-document.getElementById("display").innerHTML = displayString;
+let opString = "";
+document.getElementById("display").innerHTML = numString;
 
-// contains list of nums and operators to be executed on "equals" press
-let inputArray = [];
+//lists of nums and operators to be executed on "equals" press
+let numArray = [];
+let opArray = [];
 
-//booleans help track what is or is not a valid next input
-let decimalLimit = false;
-let isDecimalEntry = false; 
-let isOpEntry = false;
-let usingPreviousAnswer = false;
+//use when "equals" is pressed immediately after an executing an operation
+let lastNum;
+let lastOp;
+
+//bools and consts help track what is or is not a valid next input
 let error = false;
+let isOpEntry = false;
+let isDecimalEntry = false;
+let isAlreadyDecimal = false;
+let usingPreviousAnswer = false;
+let usedCE = false;
+let alreadyClearedAll = false;
 
-//array with the operator names, HARD-CODED IN PROPER ORDER OF OPERATIONS
+const integerDigitLimit = 9;
+const decimalDigitLimit = 8;
+
+//array with the operator names, IN PROPER ORDER OF OPERATIONS
 const opNames = ['multiply', 'divide', 'add', 'subtract']
 
-inputAccept(execute);
+mouseListen(execute);
+keyboardListen(execute);
 
-function inputAccept(callback)
+
+function keyboardListen(callback)
+{   
+    window.addEventListener('keydown', function(e)
+    {
+        if (Number(e.key) >= 0 && Number(e.key) <= 9) 
+        {
+            //console.log("number pressed", e.key);
+            numberInput(e);
+            highlightRemove();
+            flash(e);
+        }
+        else if (e.key == "." && !isAlreadyDecimal)
+        {
+            //console.log("decimal pressed")
+            decimalInput(e);
+            highlightRemove();
+            flash(e);
+        }
+        else if ((e.key == "+" || e.key ==  "-" || e.key ==  "*" || e.key ==  "/") && !isDecimalEntry && !error)
+        {
+            //console.log("op pressed", e.key);
+            if (isOpEntry){operatorInput(e);}
+            else
+            {
+                operatorInput(e);
+                if (!usingPreviousAnswer) {numberRecord();}
+            }
+
+            highlightRemove();
+            highlight(e);
+        }
+        else if ((e.key == "=" || e.key == "Enter") && !isOpEntry && !isDecimalEntry)
+        {
+            //console.log("enter/equals pressed");
+            if (usingPreviousAnswer) {repeatLast(execute);}
+            else
+            {
+                operatorRecord();
+                numberRecord();
+                callback(); //callback is the execute function
+            }
+
+            highlightRemove();
+            flash(e);
+        }
+        else if (e.key == "Backspace" || e.key == "Delete" || e.key == "Escape")
+        {
+            if (usedCE) {clearAll();}
+            else {clearEntry();}
+
+            highlightRemove();
+            flash(e);
+        }
+
+        if (usedCE) {document.getElementById("clear").innerHTML = "AC";}
+        else {document.getElementById("clear").innerHTML = "C";}
+    });
+}
+
+function mouseListen(callback)
 {
     const calcContainer = document.querySelector("#container");
     calcContainer.addEventListener('click', function(e)
@@ -25,152 +96,193 @@ function inputAccept(callback)
         if (e.target.getAttribute("data-type") == "num")
         {
             numberInput(e.target);
+            highlightRemove();
+            flash(e.target);
         }
-        else if (e.target.getAttribute("id") == "decimal" && !decimalLimit)
+        else if (e.target.getAttribute("id") == "decimal" && !isAlreadyDecimal)
         {
             decimalInput(e.target);
+            highlightRemove();
+            flash(e.target);
         }
-        else if (e.target.getAttribute("data-type") == "op" && !isOpEntry && !isDecimalEntry)
+        else if (e.target.getAttribute("data-type") == "op" && !isDecimalEntry && !error)
         {
-            operatorInput(e.target, inputRecord);
+            if (isOpEntry) {operatorInput(e.target);}
+            else
+            {
+                operatorInput(e.target);
+                if (!usingPreviousAnswer) {numberRecord();}
+            }
+            highlightRemove();
+            highlight(e.target);
         }
         else if (e.target.getAttribute("id") == "equals" && !isOpEntry && !isDecimalEntry)
         {
-            inputRecord();
-            callback(); //callback is the execute function
+            if (usingPreviousAnswer) {repeatLast(execute);}
+            else
+            {
+                operatorRecord();
+                numberRecord();
+                highlightRemove();
+                flash(e.target);
+                callback(); //callback is the execute function
+            }
         }
         else if (e.target.getAttribute("id") == "clear")
         {
-            clearAll();
-        }
-        else if(e.target.getAttribute("id") == "delete" && !error)
-        {
-            backspace();
+            if (usedCE) {clearAll();}
+            else {clearEntry();}
+
+            if (isOpEntry) {highlightRemove();}
+            flash(e.target);
         }
         else if(e.target.getAttribute("id") == "negate" && !isOpEntry && !isDecimalEntry && !error)
         {
             negateNum();
+            flash(e.target);
         }
+        else if (e.target.getAttribute("id") == "percent" && !isOpEntry && !isDecimalEntry && !error)
+        {
+            percent();
+            flash(e.target);
+        }
+
+        if(usedCE || alreadyClearedAll){document.getElementById("clear").innerHTML = "AC";}
+        else {document.getElementById("clear").innerHTML = "C";}
     });
 }
 
 function numberInput(target)
 {
-    if (isOpEntry || error || usingPreviousAnswer || numString === "0")
+    if (isAlreadyDecimal)
     {
-        numString = target.innerHTML;
-        console.log("after num input num", numString);
-        isOpEntry ? displayString += numString : displayString = numString;
+        let decimalPosition = numString.indexOf(".");
+        let decimalLength = numString.slice((decimalPosition + 1)).length;
+        if (decimalLength >= decimalDigitLimit) {return;}
+    }
+    else if (numString.length >= integerDigitLimit) {return;}
+
+    if (isOpEntry)
+    {
+        operatorRecord();
+        if (target.key) {numString = target.key;} 
+        else {numString = target.innerHTML;}
+    }
+    else if (usingPreviousAnswer || numString == "0")
+    {
+        if (target.key) {numString = target.key;} 
+        else {numString = target.innerHTML;}
     }
     else
     {
-        numString += target.innerHTML;
-        console.log("after num input num", numString);
-        displayString += target.innerHTML;
+        if (target.key) {numString += target.key;} 
+        else {numString += target.innerHTML;}
     }
 
-    document.getElementById("display").innerHTML = displayString;
+    document.getElementById("display").innerHTML = numString;
     error = false;
     isOpEntry = false;
     isDecimalEntry = false;
     usingPreviousAnswer = false;
+    usedCE = false;
 }
 
 function decimalInput(target)
 {
-    isDecimalEntry = true;
-    decimalLimit = true;
-    isOpEntry = false;
-
-    if (usingPreviousAnswer)
+    if (usingPreviousAnswer || isOpEntry || error)
     {
-        usingPreviousAnswer = false;
-        numString = ("0" + target.innerHTML);
-        displayString = numString;
+        if (target.key) {numString = ("0" + target.key);}
+        else {numString = ("0" + target.innerHTML);}
     }
     else
     {
-        if (displayString.slice(-1) == " ") 
-        {
-            console.log("added zero to display");
-            displayString += "0"; 
-        }
-
-        numString += target.innerHTML;
-        console.log("after dec input num", numString);
-        error ? (displayString = numString) : (displayString += target.innerHTML);
-        error = false;
+        if (target.key) {numString += target.key;}
+        else {numString += target.innerHTML;} 
     }
-    document.getElementById("display").innerHTML = displayString;
+
+    document.getElementById("display").innerHTML = numString;
+    error = false;
+    isOpEntry = false;
+    isDecimalEntry = true;
+    isAlreadyDecimal = true;
+    usingPreviousAnswer = false;
+    usedCE = false;
 }
 
-function operatorInput(target, callback)
+function operatorInput(target)
 {
+    if(target.key) 
+    {
+        if (target.key == "+"){opString = "add";}
+        if (target.key == "-"){opString = "subtract";}
+        if (target.key == "*"){opString = "multiply";}
+        if (target.key == "/"){opString = "divide";}
+    }
+    else {opString = target.id;}
+    //console.log(opString);
     isOpEntry = true;
     isDecimalEntry = false;
-    usingPreviousAnswer = false;
-    if (error) {displayString = numString;}
-    error = false;
-    displayString += (" " + target.innerHTML + " ");
-    document.getElementById("display").innerHTML = displayString;
-
-    callback(target.id); //callback function is inputRecord
+    usedCE = false;
 }
 
-function inputRecord(opID)
+function numberRecord()
 {
-    inputArray.push(Number(numString));
-
+    numArray.push(Number(numString));
     numString = "0";
-    decimalLimit = false;
-    isDecimalEntry = false;
-    usingPreviousAnswer = false;
+    //console.log(numArray);
+    usedCE = false;
+}
 
-    if (opID)
-    {
-        inputArray.push(opID);
-    }
-    else
-    {
-        isOpEntry = false;
-    } 
+function operatorRecord()
+{
+    if (opString == "") {return;}
+    opArray.push(opString);
+    opString = "";
+    //console.log(opArray);
 
-    return;
+    usedCE = false;
 }
 
 function execute()
 {
+    lastNum = numArray[numArray.length - 1];
+    //console.log(lastNum)
+    lastOp = opArray[opArray.length - 1];
+    //console.log(lastOp);
+
+    //console.log("starting execute");
     for (let i = 0; i < opNames.length; i++)
     {
-        while (inputArray.indexOf(opNames[i]) != -1)
+        while (opArray.indexOf(opNames[i]) != -1)
         {
-            let index = inputArray.indexOf(opNames[i]);
-            let result = operate(inputArray[index - 1], inputArray[index + 1], inputArray[index]);
+            let index = opArray.indexOf(opNames[i]);
+            //console.log(opArray[index], numArray[index], numArray[index+1]);
+            let result = operate(numArray[index], numArray[index + 1], opArray[index]);
+        
             if (error)
             {
                 return;
             }
             else
             {
-                inputArray.splice((index - 1), 3, result);
+                opArray.splice(index, 1);
+                numArray.splice(index, 2, result);
             }
         }
     }
 
-    displayString = `${inputArray[0]}`;
-    document.getElementById("display").innerHTML = displayString;
-
-    numString = `${inputArray[0]}`;
-    inputArray = [];
+    opArray = [];
+    numString = `${numArray[0]}`;
+    document.getElementById("display").innerHTML = numString;
 
     usingPreviousAnswer = true;
-    error = false;
+    usedCE = true;
 }
 
 function operate(num1, num2, operator)
 {
     let result;
-
+    //console.log("operate", num1, num2, operator);
     if (operator === 'add')
     {
         result = (num1 + num2);
@@ -200,88 +312,127 @@ function operate(num1, num2, operator)
     return result;
 }
 
-function negateNum()
+function divByZero()
 {
-    let match = displayString.search(`${numString}`);
-    displayString = displayString.slice(0, match);
+    document.getElementById("display").innerHTML = "ERROR: divide by zero";
+    numString = "0";
+    numArray = [];
+    opArray = [];
 
-    numString = `${-1 * Number(numString)}`
-    displayString += numString;
-    document.getElementById("display").innerHTML = displayString;
+    error = true;
+    isOpEntry = false;
+    isDecimalEntry = false;
+    isAlreadyDecimal = false;
+    usingPreviousAnswer = false;
+    return;
 }
 
-function backspace()
+function clearEntry()
 {
-    usingPreviousAnswer = false;
-
     if (isOpEntry)
     {
+        opString = "";
         isOpEntry = false;
-        inputArray.pop();
-
-        if (inputArray.length >= 1)
-        {
-            numString = inputArray.pop();
-        }
-        else
-        {
-            numString = "0"
-        }
-
-        displayString = displayString.slice(0, -3);
-        document.getElementById("display").innerHTML = displayString;
     }
-    else if (displayString.length == 1)
+    else if (usingPreviousAnswer)
+    {
+        clearAll();
+        return;
+    }
+    else
     {
         numString = "0";
-        displayString = "0";
-        document.getElementById("display").innerHTML = displayString;
+        document.getElementById("display").innerHTML = numString;
     }
-    else 
-    {
-        numString = numString.slice(0, -1);
-        displayString = displayString.slice(0, -1);
-        document.getElementById("display").innerHTML = displayString;
 
-        if (displayString.slice(-1) == ".")
-        {
-            isDecimalEntry = true;
-            decimalLimit = true;
-        }
-        else if (displayString.slice(-1) == " ")
-        {
-            isOpEntry = true;
-        }
-    }
+    usedCE = true;
+    alreadyClearedAll = false;
 }
 
 function clearAll()
 {
     numString = "0";
-    inputArray = [];
+    numArray = [];
+    opArray = [];
+    document.getElementById("display").innerHTML = numString;
 
-    decimalLimit = false;
-    isDecimalEntry = false;
+    error = false;
     isOpEntry = false;
+    isDecimalEntry = false;
+    isAlreadyDecimal = false;
     usingPreviousAnswer = false;
-
-    displayString = "0";
-    document.getElementById("display").innerHTML = displayString;
-
+    usedCE = false;
+    alreadyClearedAll = true;
     return;
 }
 
-function divByZero()
+function repeatLast(callback)
 {
-    displayString = "ERROR: divide by zero";
-    document.getElementById("display").innerHTML = displayString;
-    numString = "0";
-    inputArray = [];
+    numArray.push(lastNum);
+    console.log(numArray);
+    opArray.push(lastOp);
+    console.log(opArray);
 
-    decimalLimit = false;
-    isDecimalEntry = false;
+    callback();
+}
+
+function negateNum()
+{
+    numString = `${-1 * Number(numString)}`
+    document.getElementById("display").innerHTML = numString;
+}
+
+function percent()
+{
+    if (usingPreviousAnswer)
+    {
+        numArray.pop();
+        usingPreviousAnswer = false;
+    }
+
+    numString = numString / 100;
+    document.getElementById("display").innerHTML = numString;
+
+    error = false;
     isOpEntry = false;
+    isDecimalEntry = false;
     usingPreviousAnswer = false;
+    usedCE = false;
+    //console.log(numString, numArray);
+}
 
-    return;
+function flash(target)
+{
+    if (target.key)
+    {
+        target = document.getElementsByClassName(`${target.key}`);
+        target[0].classList.add("flash");
+        setTimeout(function(){target[0].classList.remove("flash");}, 300);
+    }
+    else
+    {
+        target.classList.add("flash");
+        setTimeout(function(){target.classList.remove("flash");}, 300);
+    }
+}
+
+function highlight(target)
+{
+    if (target.key)
+    {
+        target = document.getElementsByClassName(`${target.key}`);
+        target[0].classList.add("highlight");
+    }
+    else
+    {
+        target.classList.add("highlight");
+    }
+}
+
+function highlightRemove()
+{
+    let highlighted = Array.from(document.querySelectorAll(".highlight"));
+    highlighted.forEach(element => {
+        element.classList.remove("highlight");
+    });
 }

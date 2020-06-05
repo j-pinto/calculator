@@ -37,17 +37,56 @@
     justify-items: center;
 }
 
-div[data-type="num"], #decimal
+.flash
 {
-    background-color: lightgray;
+    animation-name: button-flash; 
+    animation-duration: 300ms;
+    animation-timing-function: linear;
+}
+@keyframes button-flash
+{
+    0% {background-color: rgba(211, 211, 211, 0);}
+    50% {background-color: rgba(211, 211, 211, 0.5);}
+    100% {background-color: rgba(211, 211, 211, 1);}
 }
 
-div[data-type="op"], #negate
+div[data-type="num"], #decimal
+{
+    background-color: rgba(211, 211, 211, 1);
+}
+
+.op
+{
+    background-color: rgb(135, 206, 250);
+    animation-name: de-highlight; 
+    animation-duration: 300ms;
+}
+@keyframes de-highlight
+{
+    0% {background-color: white;}
+    50% {background-color: rgb(185, 230, 253);}
+    100% {background-color: rgb(135, 206, 250);}
+}
+
+.highlight
+{
+    background-color: white;
+    animation-name: button-highlight; 
+    animation-duration: 300ms;
+}
+@keyframes button-highlight
+{
+    0% {background-color: rgb(135, 206, 250);}
+    50% {background-color: rgb(185, 230, 253);}
+    100% {background-color: white;}
+}
+
+#negate, #percent
 {
     background-color: lightskyblue;
 }
 
-#clear, #delete
+#clear
 {
     background-color: lightpink;
 }
