@@ -39,21 +39,18 @@ function keyboardListen(callback)
     {
         if (Number(e.key) >= 0 && Number(e.key) <= 9) 
         {
-            //console.log("number pressed", e.key);
             numberInput(e);
             highlightRemove();
             flash(e);
         }
         else if (e.key == "." && !isAlreadyDecimal)
         {
-            //console.log("decimal pressed")
             decimalInput(e);
             highlightRemove();
             flash(e);
         }
         else if ((e.key == "+" || e.key ==  "-" || e.key ==  "*" || e.key ==  "/") && !isDecimalEntry && !error)
         {
-            //console.log("op pressed", e.key);
             if (isOpEntry){operatorInput(e);}
             else
             {
@@ -66,7 +63,6 @@ function keyboardListen(callback)
         }
         else if ((e.key == "=" || e.key == "Enter") && !isOpEntry && !isDecimalEntry)
         {
-            //console.log("enter/equals pressed");
             if (usingPreviousAnswer) {repeatLast(execute);}
             else
             {
@@ -223,7 +219,6 @@ function operatorInput(target)
         if (target.key == "/"){opString = "divide";}
     }
     else {opString = target.id;}
-    //console.log(opString);
     isOpEntry = true;
     isDecimalEntry = false;
     usedCE = false;
@@ -233,7 +228,6 @@ function numberRecord()
 {
     numArray.push(Number(numString));
     numString = "0";
-    //console.log(numArray);
     isAlreadyDecimal = false;
     isDecimalEntry = false;
     usedCE = false;
@@ -244,7 +238,6 @@ function operatorRecord()
     if (opString == "") {return;}
     opArray.push(opString);
     opString = "";
-    //console.log(opArray);
     isAlreadyDecimal = false;
     isDecimalEntry = false;
     usedCE = false;
@@ -253,17 +246,12 @@ function operatorRecord()
 function execute()
 {
     lastNum = numArray[numArray.length - 1];
-    //console.log(lastNum)
-    lastOp = opArray[opArray.length - 1];
-    //console.log(lastOp);
 
-    //console.log("starting execute");
     for (let i = 0; i < opNames.length; i++)
     {
         while (opArray.indexOf(opNames[i]) != -1)
         {
             let index = opArray.indexOf(opNames[i]);
-            //console.log(opArray[index], numArray[index], numArray[index+1]);
             let result = operate(numArray[index], numArray[index + 1], opArray[index]);
         
             if (error)
@@ -291,7 +279,6 @@ function execute()
 function operate(num1, num2, operator)
 {
     let result;
-    //console.log("operate", num1, num2, operator);
     if (operator === 'add')
     {
         result = (num1 + num2);
@@ -389,10 +376,7 @@ function clearAll()
 function repeatLast(callback)
 {
     numArray.push(lastNum);
-    console.log(numArray);
     opArray.push(lastOp);
-    console.log(opArray);
-
     callback();
 }
 
@@ -429,7 +413,6 @@ function percent()
     isDecimalEntry = false;
     usingPreviousAnswer = false;
     usedCE = false;
-    //console.log(numString, numArray);
 }
 
 function flash(target)
