@@ -1,114 +1,118 @@
-#body
-{
-    background-color: rgb(31, 31, 31);
+#body {
+  background-color: rgb(31, 31, 31);
 }
 
-#container
-{
-    margin: auto;
-    display: grid;
-    height: 700px;
-    width: 400px;
+#container {
+  margin: auto;
+  display: grid;
+  height: 700px;
+  width: 400px;
 
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(7, 1fr);
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(7, 1fr);
 
-    column-gap: 5px;
-    row-gap: 5px;
+  column-gap: 5px;
+  row-gap: 5px;
 
-    font-family: monospace;
+  font-family: monospace;
 }
 
-#display
-{
-    grid-column: 1 / span 4;
+#display {
+  grid-column: 1 / span 4;
 
-    border-width: 3px;
-    border-style: solid;
-    border-color: lightgrey;
+  border-width: 3px;
+  border-style: solid;
+  border-color: lightgrey;
 
-    display: grid;
-    align-items: flex-end;
-    justify-items: right;
+  display: grid;
+  align-items: flex-end;
+  justify-items: right;
 
-    color: white;
-    font-size: 35px;
+  color: white;
+  font-size: 35px;
 }
 
-#zero
-{
-    grid-column: 1 / span 2;
-    grid-row: 6;
+#zero {
+  grid-column: 1 / span 2;
+  grid-row: 6;
 }
 
-.button
-{
-    display: grid;
-    align-items: center;
-    justify-items: center;
+.button {
+  display: grid;
+  align-items: center;
+  justify-items: center;
 
-    color: white;
-    font-size: 20px;
+  color: white;
+  font-size: 20px;
 }
 
-.flash
-{
-    animation-name: button-flash; 
-    animation-duration: 300ms;
-    animation-timing-function: linear;
+.flash {
+  animation-name: button-flash;
+  animation-duration: 300ms;
+  animation-timing-function: linear;
 }
-@keyframes button-flash
-{
-    0% {background-color: rgba(128, 128, 128, 0);}
-    50% {background-color: rgba(128, 128, 128, 0.5);}
-    100% {background-color: rgba(128, 128, 128, 1);}
+@keyframes button-flash {
+  0% {
+    background-color: rgba(128, 128, 128, 0);
+  }
+  50% {
+    background-color: rgba(128, 128, 128, 0.5);
+  }
+  100% {
+    background-color: rgba(128, 128, 128, 1);
+  }
 }
 
-div[data-type="num"], #decimal
-{
-    background-color: grey;
+div[data-type='num'],
+#decimal {
+  background-color: grey;
 }
 
-.op
-{
+.op {
+  background-color: rgb(180, 106, 180);
+  animation-name: de-highlight;
+  animation-duration: 300ms;
+}
+@keyframes de-highlight {
+  0% {
+    background-color: white;
+  }
+  50% {
+    background-color: rgb(210, 180, 210);
+  }
+  100% {
     background-color: rgb(180, 106, 180);
-    animation-name: de-highlight; 
-    animation-duration: 300ms;
-}
-@keyframes de-highlight
-{
-    0% {background-color: white;}
-    50% {background-color: rgb(210, 180, 210);}
-    100% {background-color: rgb(180, 106, 180);}
+  }
 }
 
-.highlight
-{
+.highlight {
+  background-color: white;
+  color: rgb(180, 106, 180);
+  animation-name: button-highlight;
+  animation-duration: 300ms;
+}
+@keyframes button-highlight {
+  0% {
+    background-color: rgb(180, 106, 180);
+  }
+  50% {
+    background-color: rgb(210, 180, 210);
+  }
+  100% {
     background-color: white;
     color: rgb(180, 106, 180);
-    animation-name: button-highlight; 
-    animation-duration: 300ms;
-}
-@keyframes button-highlight
-{
-    0% {background-color: rgb(180, 106, 180);}
-    50% {background-color: rgb(210, 180, 210);}
-    100% {background-color: white; color: rgb(180, 106, 180)}
+  }
 }
 
-#negate, #percent
-{
-    background-color: rgb(180, 106, 180);
+#negate,
+#percent {
+  background-color: rgb(180, 106, 180);
 }
 
-#clear
-{
-    background-color: rgb(224, 169, 66);
+#clear {
+  background-color: rgb(224, 169, 66);
 }
 
-#equals
-{
-    background-color: lightseagreen;
+#equals {
+  background-color: lightseagreen;
 }
-
-
