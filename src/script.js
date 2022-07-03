@@ -20,17 +20,17 @@ const INTEGER_DIGIT_LIMIT = 9;
 const DECIMAL_DIGIT_LIMIT = 8;
 const RESULT_MIN = 0.00000001;
 const RESULT_MAX = 100000000;
-const OP_NAMES = ['multiply', 'divide', 'add', 'subtract'];
+const OP_NAMES = ['x', '/', '+', '-'];
 
 function operate(num1, num2, operator) {
   let result;
-  if (operator === 'add') {
+  if (operator === '+') {
     result = num1 + num2;
-  } else if (operator === 'subtract') {
+  } else if (operator === '-') {
     result = num1 - num2;
-  } else if (operator === 'multiply') {
+  } else if (operator === 'x') {
     result = num1 * num2;
-  } else if (operator === 'divide') {
+  } else if (operator === '/') {
     if (num2 === 0) {
       global.error = true;
       return undefined;
