@@ -29,142 +29,36 @@ const opNames = ['multiply', 'divide', 'add', 'subtract'];
 const resultMin = 0.00000001;
 const resultMax = 100000000;
 
-mouseListen(execute);
-keyboardListen(execute);
-
-function keyboardListen(callback) {
-  window.addEventListener('keydown', (e) => {
-    if (Number(e.key) >= 0 && Number(e.key) <= 9) {
-      numberInput(e);
-      highlightRemove();
-      flash(e);
-    } else if (e.key == '.' && !isAlreadyDecimal) {
-      decimalInput(e);
-      highlightRemove();
-      flash(e);
-    } else if (
-      (e.key == '+' || e.key == '-' || e.key == '*' || e.key == '/') &&
-      !isDecimalEntry &&
-      !error
-    ) {
-      if (isOpEntry) {
-        operatorInput(e);
-      } else {
-        operatorInput(e);
-        if (!usingPreviousAnswer) {
-          numberRecord();
-        }
-      }
-
-      highlightRemove();
-      highlight(e);
-    } else if (
-      (e.key == '=' || e.key == 'Enter') &&
-      !isOpEntry &&
-      !isDecimalEntry
-    ) {
-      if (usingPreviousAnswer) {
-        repeatLast(execute);
-      } else {
-        operatorRecord();
-        numberRecord();
-        callback(); // callback is the execute function
-      }
-
-      highlightRemove();
-      flash(e);
-    } else if (e.key == 'Backspace' || e.key == 'Delete' || e.key == 'Escape') {
-      if (usedCE) {
-        clearAll();
-      } else {
-        clearEntry();
-      }
-
-      highlightRemove();
-      flash(e);
-    }
-
-    if (usedCE) {
-      document.getElementById('clear').innerHTML = 'AC';
-    } else {
-      document.getElementById('clear').innerHTML = 'C';
-    }
-  });
+function numberRecord() {
+  numArray.push(Number(numString));
+  numString = '0';
+  isAlreadyDecimal = false;
+  isDecimalEntry = false;
+  usedCE = false;
 }
 
-function mouseListen(callback) {
-  const calcContainer = document.querySelector('#container');
-  calcContainer.addEventListener('click', (e) => {
-    if (e.target.getAttribute('data-type') == 'num') {
-      numberInput(e.target);
-      highlightRemove();
-      flash(e.target);
-    } else if (e.target.getAttribute('id') == 'decimal' && !isAlreadyDecimal) {
-      decimalInput(e.target);
-      highlightRemove();
-      flash(e.target);
-    } else if (
-      e.target.getAttribute('data-type') == 'op' &&
-      !isDecimalEntry &&
-      !error
-    ) {
-      if (isOpEntry) {
-        operatorInput(e.target);
-      } else {
-        operatorInput(e.target);
-        if (!usingPreviousAnswer) {
-          numberRecord();
-        }
-      }
-      highlightRemove();
-      highlight(e.target);
-    } else if (
-      e.target.getAttribute('id') == 'equals' &&
-      !isOpEntry &&
-      !isDecimalEntry
-    ) {
-      if (usingPreviousAnswer) {
-        repeatLast(execute);
-      } else {
-        operatorRecord();
-        numberRecord();
-        highlightRemove();
-        flash(e.target);
-        callback(); // callback is the execute function
-      }
-    } else if (e.target.getAttribute('id') == 'clear') {
-      if (usedCE) {
-        clearAll();
-      } else {
-        clearEntry();
-      }
+function operatorRecord() {
+  if (opString === '') {
+    return;
+  }
+  opArray.push(opString);
+  opString = '';
+  isAlreadyDecimal = false;
+  isDecimalEntry = false;
+  usedCE = false;
+}
 
-      highlightRemove();
-      flash(e.target);
-    } else if (
-      e.target.getAttribute('id') == 'negate' &&
-      !isOpEntry &&
-      !isDecimalEntry &&
-      !error
-    ) {
-      negateNum();
-      flash(e.target);
-    } else if (
-      e.target.getAttribute('id') == 'percent' &&
-      !isOpEntry &&
-      !isDecimalEntry &&
-      !error
-    ) {
-      percent();
-      flash(e.target);
-    }
+function divByZero() {
+  document.getElementById('display').innerHTML = 'ERROR: divide by zero';
+  numString = '0';
+  numArray = [];
+  opArray = [];
 
-    if (usedCE || alreadyClearedAll) {
-      document.getElementById('clear').innerHTML = 'AC';
-    } else {
-      document.getElementById('clear').innerHTML = 'C';
-    }
-  });
+  error = true;
+  isOpEntry = false;
+  isDecimalEntry = false;
+  isAlreadyDecimal = false;
+  usingPreviousAnswer = false;
 }
 
 function numberInput(target) {
@@ -185,7 +79,7 @@ function numberInput(target) {
     } else {
       numString = target.innerHTML;
     }
-  } else if (usingPreviousAnswer || numString == '0') {
+  } else if (usingPreviousAnswer || numString === '0') {
     if (target.key) {
       numString = target.key;
     } else {
@@ -229,16 +123,16 @@ function decimalInput(target) {
 
 function operatorInput(target) {
   if (target.key) {
-    if (target.key == '+') {
+    if (target.key === '+') {
       opString = 'add';
     }
-    if (target.key == '-') {
+    if (target.key === '-') {
       opString = 'subtract';
     }
-    if (target.key == '*') {
+    if (target.key === '*') {
       opString = 'multiply';
     }
-    if (target.key == '/') {
+    if (target.key === '/') {
       opString = 'divide';
     }
   } else {
@@ -249,30 +143,38 @@ function operatorInput(target) {
   usedCE = false;
 }
 
-function numberRecord() {
-  numArray.push(Number(numString));
-  numString = '0';
-  isAlreadyDecimal = false;
-  isDecimalEntry = false;
-  usedCE = false;
-}
+function operate(num1, num2, operator) {
+  let result;
+  if (operator === 'add') {
+    result = num1 + num2;
+  } else if (operator === 'subtract') {
+    result = num1 - num2;
+  } else if (operator === 'multiply') {
+    result = num1 * num2;
+  } else if (operator === 'divide') {
+    if (num2 === 0) {
+      error = true;
+      divByZero();
+      return undefined;
+    }
 
-function operatorRecord() {
-  if (opString == '') {
-    return;
+    result = num1 / num2;
   }
-  opArray.push(opString);
-  opString = '';
-  isAlreadyDecimal = false;
-  isDecimalEntry = false;
-  usedCE = false;
+
+  if (result < resultMin || result > resultMax) {
+    result = result.toExponential(2);
+  } else {
+    result = Number(result.toFixed(8));
+  }
+
+  return result;
 }
 
 function execute() {
   lastNum = numArray[numArray.length - 1];
 
-  for (let i = 0; i < opNames.length; i++) {
-    while (opArray.indexOf(opNames[i]) != -1) {
+  for (let i = 0; i < opNames.length; i += 1) {
+    while (opArray.indexOf(opNames[i]) !== -1) {
       const index = opArray.indexOf(opNames[i]);
       const result = operate(
         numArray[index],
@@ -299,44 +201,19 @@ function execute() {
   usedCE = true;
 }
 
-function operate(num1, num2, operator) {
-  let result;
-  if (operator === 'add') {
-    result = num1 + num2;
-  } else if (operator === 'subtract') {
-    result = num1 - num2;
-  } else if (operator === 'multiply') {
-    result = num1 * num2;
-  } else if (operator === 'divide') {
-    if (num2 == 0) {
-      error = true;
-      divByZero();
-      return;
-    }
-
-    result = num1 / num2;
-  }
-
-  if (result < resultMin || result > resultMax) {
-    result = result.toExponential(2);
-  } else {
-    result = Number(result.toFixed(8));
-  }
-
-  return result;
-}
-
-function divByZero() {
-  document.getElementById('display').innerHTML = 'ERROR: divide by zero';
+function clearAll() {
   numString = '0';
   numArray = [];
   opArray = [];
+  document.getElementById('display').innerHTML = numString;
 
-  error = true;
+  error = false;
   isOpEntry = false;
   isDecimalEntry = false;
   isAlreadyDecimal = false;
   usingPreviousAnswer = false;
+  usedCE = false;
+  alreadyClearedAll = true;
 }
 
 function clearEntry() {
@@ -355,21 +232,6 @@ function clearEntry() {
   isAlreadyDecimal = false;
   usedCE = true;
   alreadyClearedAll = false;
-}
-
-function clearAll() {
-  numString = '0';
-  numArray = [];
-  opArray = [];
-  document.getElementById('display').innerHTML = numString;
-
-  error = false;
-  isOpEntry = false;
-  isDecimalEntry = false;
-  isAlreadyDecimal = false;
-  usingPreviousAnswer = false;
-  usedCE = false;
-  alreadyClearedAll = true;
 }
 
 function repeatLast(callback) {
@@ -410,26 +272,28 @@ function percent() {
 }
 
 function flash(target) {
+  let pressedKey;
   if (target.key) {
-    target = document.getElementsByClassName(`${target.key}`);
-    target[0].classList.add('flash');
+    pressedKey = document.getElementsByClassName(`${target.key}`);
+    pressedKey[0].classList.add('flash');
     setTimeout(() => {
-      target[0].classList.remove('flash');
+      pressedKey[0].classList.remove('flash');
     }, 300);
   } else {
-    target.classList.add('flash');
+    pressedKey.classList.add('flash');
     setTimeout(() => {
-      target.classList.remove('flash');
+      pressedKey.classList.remove('flash');
     }, 300);
   }
 }
 
 function highlight(target) {
+  let pressedKey;
   if (target.key) {
-    target = document.getElementsByClassName(`${target.key}`);
-    target[0].classList.add('highlight');
+    pressedKey = document.getElementsByClassName(`${target.key}`);
+    pressedKey[0].classList.add('highlight');
   } else {
-    target.classList.add('highlight');
+    pressedKey.classList.add('highlight');
   }
 }
 
@@ -439,3 +303,145 @@ function highlightRemove() {
     element.classList.remove('highlight');
   });
 }
+
+function keyboardListen(callback) {
+  window.addEventListener('keydown', (e) => {
+    if (Number(e.key) >= 0 && Number(e.key) <= 9) {
+      numberInput(e);
+      highlightRemove();
+      flash(e);
+    } else if (e.key === '.' && !isAlreadyDecimal) {
+      decimalInput(e);
+      highlightRemove();
+      flash(e);
+    } else if (
+      (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') &&
+      !isDecimalEntry &&
+      !error
+    ) {
+      if (isOpEntry) {
+        operatorInput(e);
+      } else {
+        operatorInput(e);
+        if (!usingPreviousAnswer) {
+          numberRecord();
+        }
+      }
+
+      highlightRemove();
+      highlight(e);
+    } else if (
+      (e.key === '=' || e.key === 'Enter') &&
+      !isOpEntry &&
+      !isDecimalEntry
+    ) {
+      if (usingPreviousAnswer) {
+        repeatLast(execute);
+      } else {
+        operatorRecord();
+        numberRecord();
+        callback(); // callback is the execute function
+      }
+
+      highlightRemove();
+      flash(e);
+    } else if (
+      e.key === 'Backspace' ||
+      e.key === 'Delete' ||
+      e.key === 'Escape'
+    ) {
+      if (usedCE) {
+        clearAll();
+      } else {
+        clearEntry();
+      }
+
+      highlightRemove();
+      flash(e);
+    }
+
+    if (usedCE) {
+      document.getElementById('clear').innerHTML = 'AC';
+    } else {
+      document.getElementById('clear').innerHTML = 'C';
+    }
+  });
+}
+
+function mouseListen(callback) {
+  const calcContainer = document.querySelector('#container');
+  calcContainer.addEventListener('click', (e) => {
+    if (e.target.getAttribute('data-type') === 'num') {
+      numberInput(e.target);
+      highlightRemove();
+      flash(e.target);
+    } else if (e.target.getAttribute('id') === 'decimal' && !isAlreadyDecimal) {
+      decimalInput(e.target);
+      highlightRemove();
+      flash(e.target);
+    } else if (
+      e.target.getAttribute('data-type') === 'op' &&
+      !isDecimalEntry &&
+      !error
+    ) {
+      if (isOpEntry) {
+        operatorInput(e.target);
+      } else {
+        operatorInput(e.target);
+        if (!usingPreviousAnswer) {
+          numberRecord();
+        }
+      }
+      highlightRemove();
+      highlight(e.target);
+    } else if (
+      e.target.getAttribute('id') === 'equals' &&
+      !isOpEntry &&
+      !isDecimalEntry
+    ) {
+      if (usingPreviousAnswer) {
+        repeatLast(execute);
+      } else {
+        operatorRecord();
+        numberRecord();
+        highlightRemove();
+        flash(e.target);
+        callback(); // callback is the execute function
+      }
+    } else if (e.target.getAttribute('id') === 'clear') {
+      if (usedCE) {
+        clearAll();
+      } else {
+        clearEntry();
+      }
+
+      highlightRemove();
+      flash(e.target);
+    } else if (
+      e.target.getAttribute('id') === 'negate' &&
+      !isOpEntry &&
+      !isDecimalEntry &&
+      !error
+    ) {
+      negateNum();
+      flash(e.target);
+    } else if (
+      e.target.getAttribute('id') === 'percent' &&
+      !isOpEntry &&
+      !isDecimalEntry &&
+      !error
+    ) {
+      percent();
+      flash(e.target);
+    }
+
+    if (usedCE || alreadyClearedAll) {
+      document.getElementById('clear').innerHTML = 'AC';
+    } else {
+      document.getElementById('clear').innerHTML = 'C';
+    }
+  });
+}
+
+mouseListen(execute);
+keyboardListen(execute);
