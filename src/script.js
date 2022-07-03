@@ -39,7 +39,7 @@ function operate(num1, num2, operator) {
     result = num1 / num2;
   }
 
-  if (result < RESULT_MIN || result > RESULT_MAX) {
+  if (Math.abs(result) < RESULT_MIN || Math.abs(result) > RESULT_MAX) {
     result = result.toExponential(2);
   } else {
     result = Number(result.toFixed(8));
