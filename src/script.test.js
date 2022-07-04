@@ -15,3 +15,11 @@ test('operate formats results to fixed point 8 decimal places w/ correct roundin
   expect(operate(0.00000001, 0.000000015, '+')).toEqual(0.00000002);
   expect(operate(999999999, 0.000000014, '+')).toEqual(999999999.00000001);
 });
+
+test('operate results formatted to exponential notation when above max value', () => {
+  expect(operate(999999999.99999999, 0.00000001, '+')).toEqual('1.00e+9');
+});
+
+test('operate results formatted to exponential notation when below min value', () => {
+  expect(operate(0.00000001, 3, '/')).toEqual('3.33e-9');
+});
