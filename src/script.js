@@ -45,6 +45,15 @@ function operate(num1, num2, operator) {
     result = Number(result.toFixed(8));
   }
 
+  // handle Max and Min allowed values in exponential notation
+  if (Math.abs(result) <= Number.MIN_VALUE) {
+    result = 0;
+  }
+
+  if (Math.abs(result) >= Number.MAX_VALUE) {
+    result = (Math.sign(result) * Number.MAX_VALUE).toExponential(2);
+  }
+
   return result;
 }
 

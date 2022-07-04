@@ -23,3 +23,13 @@ test('operate results formatted to exponential notation when above max value', (
 test('operate results formatted to exponential notation when below min value', () => {
   expect(operate(0.00000001, 3, '/')).toEqual('3.33e-9');
 });
+
+test('operate returns 1.80e+308, rather than Infinity, when going beyond Number.MAX_VALUE', () => {
+  expect(operate(Number.MAX_VALUE, 1, '+')).toEqual('1.80e+308');
+  expect(operate(1.7e307, 100, 'x')).toEqual('1.80e+308');
+});
+
+test('operate returns 0 when result is less than Number.MIN_VALUE', () => {
+  expect(operate(Number.MIN_VALUE, 2, '/')).toEqual(0);
+  expect(operate(5e-323, 10, '/')).toEqual(0);
+});
