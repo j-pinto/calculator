@@ -19,7 +19,7 @@ const global = {
 const INTEGER_DIGIT_LIMIT = 9;
 const DECIMAL_DIGIT_LIMIT = 8;
 const RESULT_MIN = 0.00000001;
-const RESULT_MAX = 100000000;
+const RESULT_MAX = 1000000000;
 const OP_NAMES = ['x', '/', '+', '-'];
 
 function operate(num1, num2, operator) {
@@ -39,7 +39,7 @@ function operate(num1, num2, operator) {
     result = num1 / num2;
   }
 
-  if (Math.abs(result) < RESULT_MIN || Math.abs(result) > RESULT_MAX) {
+  if (Math.abs(result) < RESULT_MIN || Math.abs(result) >= RESULT_MAX) {
     result = result.toExponential(2);
   } else {
     result = Number(result.toFixed(8));
