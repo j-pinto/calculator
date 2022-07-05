@@ -61,4 +61,23 @@ function operate(num1, num2, operator) {
   return result;
 }
 
-export { operate };
+function execute(numArray, opArray) {
+  for (let offset = 0; offset <= 2; offset += 2) {
+    const op1 = OP_NAMES[0 + offset];
+    const op2 = OP_NAMES[1 + offset];
+    while (opArray.some((op) => op === op1 || op === op2)) {
+      const index = opArray.findIndex((op) => op === op1 || op === op2);
+      const operator = opArray[index];
+      const num1 = numArray[index];
+      const num2 = numArray[index + 1];
+      const result = operate(num1, num2, operator);
+      opArray.splice(index, 1);
+      numArray.splice(index, 2, result);
+      if (result === undefined) {
+        return;
+      }
+    }
+  }
+}
+
+export { operate, execute };

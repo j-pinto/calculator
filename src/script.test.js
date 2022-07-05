@@ -35,3 +35,21 @@ describe('operate function', () => {
     expect(operate(5e-323, 10, '/')).toEqual(0);
   });
 });
+
+describe('execute function', () => {
+  test('follows order of operations to get correct answer', () => {
+    let numArray = [1, 2, 3, 4, 5];
+    let opArray = ['+', 'x', '-', '/'];
+    execute(numArray, opArray);
+    expect(opArray).toEqual([]);
+    expect(numArray).toEqual([6.2]);
+  });
+
+  test('breaks early when encountering divide by zero', () => {
+    let numArray = [1, 2, 0, 4, 5];
+    let opArray = ['+', '/', '-', 'x'];
+    execute(numArray, opArray);
+    expect(opArray).toEqual(['+', '-', 'x']);
+    expect(numArray).toEqual([1, undefined, 4, 5]);
+  });
+});
