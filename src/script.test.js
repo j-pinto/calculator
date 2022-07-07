@@ -30,16 +30,18 @@ describe('execute function', () => {
   test('follows order of operations to get correct answer', () => {
     let numArray = [1, 2, 3, 4, 5];
     let opArray = ['+', 'x', '-', '/'];
-    execute(numArray, opArray);
-    expect(opArray).toEqual([]);
+    let result = execute(numArray, opArray);
+    expect(result).toEqual(6.2);
     expect(numArray).toEqual([6.2]);
+    expect(opArray).toEqual([]);
   });
 
   test('breaks early when encountering divide by zero', () => {
     let numArray = [1, 2, 0, 4, 5];
     let opArray = ['+', '/', '-', 'x'];
-    execute(numArray, opArray);
-    expect(opArray).toEqual(['+', '-', 'x']);
+    let result = execute(numArray, opArray);
+    expect(result).toEqual(undefined);
     expect(numArray).toEqual([1, undefined, 4, 5]);
+    expect(opArray).toEqual(['+', '-', 'x']);
   });
 });

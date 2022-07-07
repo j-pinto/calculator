@@ -63,10 +63,11 @@ function execute(numArray, opArray) {
       opArray.splice(index, 1);
       numArray.splice(index, 2, result);
       if (result === undefined) {
-        return;
+        return numArray[index];
       }
     }
   }
+  return numArray[0];
 }
 
 function displayFormat(result) {
