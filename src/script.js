@@ -1,6 +1,6 @@
 import './style.css';
 
-const global = {
+const GLOBAL = {
   numString: '0',
   opString: '',
   numArray: [],
@@ -32,7 +32,7 @@ function operate(num1, num2, operator) {
     result = num1 * num2;
   } else if (operator === '/') {
     if (num2 === 0) {
-      global.error = true;
+      GLOBAL.error = true;
       return undefined;
     }
 
@@ -43,7 +43,7 @@ function operate(num1, num2, operator) {
     Math.abs(result) <= Number.MIN_VALUE ||
     Math.abs(result) >= Number.MAX_VALUE
   ) {
-    global.error = true;
+    GLOBAL.error = true;
     result = undefined;
   }
 
@@ -86,11 +86,11 @@ function displayFormat(result) {
 function showResult(result) {
   const displayString = `${result}`;
   document.getElementById('display').innerHTML = displayString;
-  global.opArray = [];
-  global.isDecimalEntry = false;
-  global.isAlreadyDecimal = false;
-  global.usingPreviousAnswer = true;
-  global.usedCE = true;
+  GLOBAL.opArray = [];
+  GLOBAL.isDecimalEntry = false;
+  GLOBAL.isAlreadyDecimal = false;
+  GLOBAL.usingPreviousAnswer = true;
+  GLOBAL.usedCE = true;
 }
 
 export { operate, execute, displayFormat, showResult };
