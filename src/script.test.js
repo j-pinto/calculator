@@ -1,4 +1,4 @@
-import { operate, execute } from './script.js';
+import { operate, execute, displayFormat } from './script.js';
 
 describe('operate function', () => {
   test('verify basic operations are working', () => {
@@ -8,31 +8,21 @@ describe('operate function', () => {
     expect(operate(4.2, 2, '/')).toEqual(2.1);
   });
 
-  test('function returns undefined when dividing by zero', () => {
+  test('function returns undefined if div by 0 or beyond min/max values', () => {
     expect(operate(1, 0, '/')).toEqual(undefined);
+    expect(operate(1.7e307, 100, 'x')).toEqual(undefined);
+    expect(operate(5e-323, 10, '/')).toEqual(undefined);
+  });
+});
+
+describe('displayFormat function', () => {
+  test('formats results to 9 digits of precision', () => {
+    expect(displayFormat(123456789.1)).toEqual(123456789);
   });
 
-  test('formats results to fixed point 8 decimal places w/ correct rounding', () => {
-    expect(operate(0.00000001, 0.000000015, '+')).toEqual(0.00000002);
-    expect(operate(999999999, 0.000000014, '+')).toEqual(999999999.00000001);
-  });
-
-  test('results formatted to exponential notation when above max value', () => {
-    expect(operate(999999999.99999999, 0.00000001, '+')).toEqual('1.00e+9');
-  });
-
-  test('results formatted to exponential notation when below min value', () => {
-    expect(operate(0.00000001, 3, '/')).toEqual('3.33e-9');
-  });
-
-  test('returns 1.80e+308, rather than Infinity, when going beyond Number.MAX_VALUE', () => {
-    expect(operate(Number.MAX_VALUE, 1, '+')).toEqual('1.80e+308');
-    expect(operate(1.7e307, 100, 'x')).toEqual('1.80e+308');
-  });
-
-  test('returns 0 when result is less than Number.MIN_VALUE', () => {
-    expect(operate(Number.MIN_VALUE, 2, '/')).toEqual(0);
-    expect(operate(5e-323, 10, '/')).toEqual(0);
+  test('formats very large and very small numbers to exponential', () => {
+    expect(displayFormat(1234567890)).toEqual('1.23e+9');
+    expect(displayFormat(0.00000000099999999)).toEqual('1.00e-9');
   });
 });
 

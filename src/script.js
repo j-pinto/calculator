@@ -18,8 +18,8 @@ const global = {
 
 const INTEGER_INPUT_LIMIT = 9;
 const DECIMAL_INPUT_LIMIT = 8;
-const FIXED_POINT_MIN = 0.00000001;
-const FIXED_POINT_MAX = 1000000000;
+const STD_NOTATION_MIN = 0.000000001;
+const STD_NOTATION_MAX = 1000000000;
 const OP_NAMES = ['x', '/', '+', '-'];
 
 function operate(num1, num2, operator) {
@@ -39,23 +39,12 @@ function operate(num1, num2, operator) {
     result = num1 / num2;
   }
 
-  // keep results in fixed point or move to exponential notaion if too large/small
   if (
-    Math.abs(result) < FIXED_POINT_MIN ||
-    Math.abs(result) >= FIXED_POINT_MAX
+    Math.abs(result) <= Number.MIN_VALUE ||
+    Math.abs(result) >= Number.MAX_VALUE
   ) {
-    result = result.toExponential(2);
-  } else {
-    result = Number(result.toFixed(8));
-  }
-
-  // handle Max and Min allowed values in exponential notation
-  if (Math.abs(result) <= Number.MIN_VALUE) {
-    result = 0;
-  }
-
-  if (Math.abs(result) >= Number.MAX_VALUE) {
-    result = (Math.sign(result) * Number.MAX_VALUE).toExponential(2);
+    global.error = true;
+    result = undefined;
   }
 
   return result;
@@ -80,4 +69,17 @@ function execute(numArray, opArray) {
   }
 }
 
-export { operate, execute };
+function displayFormat(result) {
+  let formattedResultString;
+  if (result === undefined) {
+    formattedResultString = 'Error';
+  } else if (result >= STD_NOTATION_MAX || result < STD_NOTATION_MIN) {
+    formattedResultString = parseFloat(result.toPrecision(9)).toExponential(2);
+  } else {
+    formattedResultString = parseFloat(result.toPrecision(9));
+  }
+
+  return formattedResultString;
+}
+
+export { operate, execute, displayFormat };
