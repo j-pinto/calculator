@@ -83,4 +83,14 @@ function displayFormat(result) {
   return formattedResultString;
 }
 
-export { operate, execute, displayFormat };
+function showResult(result) {
+  const displayString = `${result}`;
+  document.getElementById('display').innerHTML = displayString;
+  global.opArray = [];
+  global.isDecimalEntry = false;
+  global.isAlreadyDecimal = false;
+  global.usingPreviousAnswer = true;
+  global.usedCE = true;
+}
+
+export { operate, execute, displayFormat, showResult };
