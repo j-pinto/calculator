@@ -92,31 +92,6 @@ function showResult(result) {
   GLOBAL.usedCE = true;
 }
 
-function keyboardListener() {
-  window.addEventListener('keydown', (e) => {
-    if (Number(e.key) >= 0 && Number(e.key) <= 9) {
-      numberInput(e.key);
-    } else if (e.key === '.') {
-      decimalInput(e.key);
-    } else if (
-      e.key === '+' ||
-      e.key === '-' ||
-      e.key === '*' ||
-      e.key === '/'
-    ) {
-      // opInput()
-    } else if (e.key === '=' || e.key === 'Enter') {
-      // attemptExecute()
-    } else if (
-      e.key === 'Backspace' ||
-      e.key === 'Delete' ||
-      e.key === 'Escape'
-    ) {
-      // clear()
-    }
-  });
-}
-
 function numberInput(input) {
   if (
     GLOBAL.numString.includes('.') &&
@@ -148,6 +123,31 @@ function decimalInput(input) {
   }
 
   GLOBAL.numString += input;
+}
+
+function keyboardListener() {
+  window.addEventListener('keydown', (e) => {
+    if (Number(e.key) >= 0 && Number(e.key) <= 9) {
+      numberInput(e.key);
+    } else if (e.key === '.') {
+      decimalInput(e.key);
+    } else if (
+      e.key === '+' ||
+      e.key === '-' ||
+      e.key === '*' ||
+      e.key === '/'
+    ) {
+      // opInput()
+    } else if (e.key === '=' || e.key === 'Enter') {
+      // attemptExecute()
+    } else if (
+      e.key === 'Backspace' ||
+      e.key === 'Delete' ||
+      e.key === 'Escape'
+    ) {
+      // clear()
+    }
+  });
 }
 
 export {
