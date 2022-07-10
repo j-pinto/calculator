@@ -19,7 +19,7 @@ const GLOBAL = {
 const INPUT_DIGIT_LIMIT = 9;
 const STD_NOTATION_MIN = 0.000000001;
 const STD_NOTATION_MAX = 1000000000;
-const OP_NAMES = ['x', '/', '+', '-'];
+const OP_NAMES = ['*', '/', '+', '-'];
 
 function operate(num1, num2, operator) {
   let result;
@@ -27,7 +27,7 @@ function operate(num1, num2, operator) {
     result = num1 + num2;
   } else if (operator === '-') {
     result = num1 - num2;
-  } else if (operator === 'x') {
+  } else if (operator === '*') {
     result = num1 * num2;
   } else if (operator === '/') {
     if (num2 === 0) {

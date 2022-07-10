@@ -12,13 +12,13 @@ describe('operate function', () => {
   test('verify basic operations are working', () => {
     expect(operate(1, 2, '+')).toEqual(3);
     expect(operate(3, 4, '-')).toEqual(-1);
-    expect(operate(-5, 3, 'x')).toEqual(-15);
+    expect(operate(-5, 3, '*')).toEqual(-15);
     expect(operate(4.2, 2, '/')).toEqual(2.1);
   });
 
   test('function returns undefined if div by 0 or beyond min/max values', () => {
     expect(operate(1, 0, '/')).toEqual(undefined);
-    expect(operate(1.7e307, 100, 'x')).toEqual(undefined);
+    expect(operate(1.7e307, 100, '*')).toEqual(undefined);
     expect(operate(5e-323, 10, '/')).toEqual(undefined);
   });
 });
@@ -37,7 +37,7 @@ describe('displayFormat function', () => {
 describe('execute function', () => {
   test('follows order of operations to get correct answer', () => {
     let numArray = [1, 2, 3, 4, 5];
-    let opArray = ['+', 'x', '-', '/'];
+    let opArray = ['+', '*', '-', '/'];
     let result = execute(numArray, opArray);
     expect(result).toEqual(6.2);
     expect(numArray).toEqual([6.2]);
@@ -46,11 +46,11 @@ describe('execute function', () => {
 
   test('breaks early when encountering divide by zero', () => {
     let numArray = [1, 2, 0, 4, 5];
-    let opArray = ['+', '/', '-', 'x'];
+    let opArray = ['+', '/', '-', '*'];
     let result = execute(numArray, opArray);
     expect(result).toEqual(undefined);
     expect(numArray).toEqual([1, undefined, 4, 5]);
-    expect(opArray).toEqual(['+', '-', 'x']);
+    expect(opArray).toEqual(['+', '-', '*']);
   });
 });
 
