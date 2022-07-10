@@ -1,4 +1,12 @@
-import { operate, execute, displayFormat } from './script.js';
+import {
+  GLOBAL,
+  operate,
+  execute,
+  displayFormat,
+  keyboardListener,
+  numberInput,
+  decimalInput,
+} from './script.js';
 
 describe('operate function', () => {
   test('verify basic operations are working', () => {
@@ -43,5 +51,71 @@ describe('execute function', () => {
     expect(result).toEqual(undefined);
     expect(numArray).toEqual([1, undefined, 4, 5]);
     expect(opArray).toEqual(['+', '-', 'x']);
+  });
+});
+
+describe('number input', () => {
+  afterEach(() => {
+    GLOBAL.numString = '0';
+  });
+
+  test('basic num input', () => {
+    numberInput('1');
+    numberInput('2');
+    numberInput('3');
+    expect(GLOBAL.numString).toEqual('123');
+  });
+
+  test('disallows integers over 9 digits long', () => {
+    for (let i = 0; i < 9; i++) {
+      numberInput('1');
+    }
+    numberInput('8');
+    expect(GLOBAL.numString).toEqual('111111111');
+  });
+});
+
+describe('decimal input', () => {
+  afterEach(() => {
+    GLOBAL.numString = '0';
+  });
+
+  test('basic decimal input', () => {
+    numberInput('1');
+    decimalInput('.');
+    numberInput('2');
+    expect(GLOBAL.numString).toEqual('1.2');
+  });
+
+  test('allows 10 characters in numString if decimal', () => {
+    for (let i = 0; i < 8; i++) {
+      numberInput('1');
+    }
+    decimalInput('.');
+    numberInput('9');
+    expect(GLOBAL.numString).toEqual('11111111.9');
+  });
+
+  test('disallows second decimal point', () => {
+    numberInput('1');
+    decimalInput('.');
+    numberInput('2');
+    decimalInput('.');
+    numberInput('3');
+    expect(GLOBAL.numString).toEqual('1.23');
+  });
+});
+
+describe('keyboard listener', () => {
+  test('keyboard number input', () => {
+    let event1 = new KeyboardEvent('keydown', { key: '1' });
+    let event2 = new KeyboardEvent('keydown', { key: '.' });
+    keyboardListener();
+    window.dispatchEvent(event1);
+    window.dispatchEvent(event2);
+    for (let i = 0; i < 8; i++) {
+      window.dispatchEvent(event1);
+    }
+    expect(GLOBAL.numString).toEqual('1.11111111');
   });
 });

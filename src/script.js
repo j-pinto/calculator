@@ -16,8 +16,7 @@ const GLOBAL = {
   alreadyClearedAll: false,
 };
 
-const INTEGER_INPUT_LIMIT = 9;
-const DECIMAL_INPUT_LIMIT = 8;
+const INPUT_DIGIT_LIMIT = 9;
 const STD_NOTATION_MIN = 0.000000001;
 const STD_NOTATION_MAX = 1000000000;
 const OP_NAMES = ['x', '/', '+', '-'];
@@ -96,9 +95,9 @@ function showResult(result) {
 function keyboardListener() {
   window.addEventListener('keydown', (e) => {
     if (Number(e.key) >= 0 && Number(e.key) <= 9) {
-      // numberInput()
+      numberInput(e.key);
     } else if (e.key === '.') {
-      // decimalInput()
+      decimalInput(e.key);
     } else if (
       e.key === '+' ||
       e.key === '-' ||
@@ -118,6 +117,46 @@ function keyboardListener() {
   });
 }
 
-keyboardListener();
+function numberInput(input) {
+  if (
+    GLOBAL.numString.includes('.') &&
+    GLOBAL.numString.length >= INPUT_DIGIT_LIMIT + 1
+  ) {
+    return;
+  }
 
-export { operate, execute, displayFormat, showResult };
+  if (
+    !GLOBAL.numString.includes('.') &&
+    GLOBAL.numString.length >= INPUT_DIGIT_LIMIT
+  ) {
+    return;
+  }
+
+  if (GLOBAL.numString === '0') {
+    GLOBAL.numString = input;
+  } else {
+    GLOBAL.numString += input;
+  }
+}
+
+function decimalInput(input) {
+  if (
+    GLOBAL.numString.includes('.') ||
+    GLOBAL.numString.length >= INPUT_DIGIT_LIMIT
+  ) {
+    return;
+  }
+
+  GLOBAL.numString += input;
+}
+
+export {
+  GLOBAL,
+  operate,
+  execute,
+  displayFormat,
+  showResult,
+  keyboardListener,
+  numberInput,
+  decimalInput,
+};
