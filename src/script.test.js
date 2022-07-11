@@ -8,6 +8,20 @@ import {
   decimalInput,
 } from './script.js';
 
+beforeEach(() => {
+  GLOBAL.numString = '0';
+  GLOBAL.numArray = [];
+  GLOBAL.opArray = [];
+  GLOBAL.error = false;
+});
+
+afterEach(() => {
+  GLOBAL.numString = '0';
+  GLOBAL.numArray = [];
+  GLOBAL.opArray = [];
+  GLOBAL.error = false;
+});
+
 describe('operate function', () => {
   test('verify basic operations are working', () => {
     expect(operate(1, 2, '+')).toEqual(3);
@@ -55,10 +69,6 @@ describe('execute function', () => {
 });
 
 describe('number input', () => {
-  afterEach(() => {
-    GLOBAL.numString = '0';
-  });
-
   test('basic num input', () => {
     numberInput('1');
     numberInput('2');
