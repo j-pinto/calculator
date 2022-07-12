@@ -107,7 +107,7 @@ function numberInput(input) {
     return;
   }
 
-  if (GLOBAL.numString === '0') {
+  if (GLOBAL.numString === '0' || GLOBAL.numString === '') {
     GLOBAL.numString = input;
   } else {
     GLOBAL.numString += input;
@@ -132,10 +132,14 @@ function opInput(input) {
 
   // if using previous answer as input
   if (GLOBAL.numArray.length === 1 && GLOBAL.opArray.length === 0) {
-    GLOBAL.numString = '0';
-  } else if (GLOBAL.numString !== '0') {
+    GLOBAL.numString = '';
+    // else if using current numString
+  } else if (GLOBAL.numString !== '') {
     GLOBAL.numArray.push(Number(GLOBAL.numString));
-    GLOBAL.numString = '0';
+    GLOBAL.numString = '';
+    // else if using zero as default number when op entry occurs first
+  } else if (GLOBAL.numString === '' && GLOBAL.opArray.length === 0) {
+    GLOBAL.numArray.push(0);
   }
 
   // if changing op type

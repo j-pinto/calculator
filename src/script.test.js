@@ -162,8 +162,7 @@ describe('operator input', () => {
     expect(GLOBAL.opArray).toEqual(['+']);
   });
 
-  xtest('uses 0 as default first num if operator is the first input', () => {
-    //DOES NOT PASS, WILL FIX LATER
+  test('uses 0 as default first num if operator is the first input', () => {
     opInput('+');
     expect(GLOBAL.numArray).toEqual([0]);
     expect(GLOBAL.opArray).toEqual(['+']);
