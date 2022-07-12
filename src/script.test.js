@@ -6,6 +6,7 @@ import {
   keyboardListener,
   numberInput,
   decimalInput,
+  opInput,
 } from './script.js';
 
 beforeEach(() => {
@@ -113,6 +114,59 @@ describe('decimal input', () => {
     decimalInput('.');
     numberInput('3');
     expect(GLOBAL.numString).toEqual('1.23');
+  });
+});
+
+describe('operator input', () => {
+  test('allows alternating number and operator inputs', () => {
+    numberInput('1');
+    opInput('+');
+    numberInput('2');
+    opInput('*');
+    numberInput('3');
+    opInput('-');
+    expect(GLOBAL.numArray).toEqual([1, 2, 3]);
+    expect(GLOBAL.opArray).toEqual(['+', '*', '-']);
+  });
+
+  test('uses previous answer as first number if available', () => {
+    GLOBAL.numArray = [1, 2, 3, 4, 5];
+    GLOBAL.opArray = ['+', '*', '-', '/'];
+    let result = execute(GLOBAL.numArray, GLOBAL.opArray);
+    expect(result).toEqual(6.2);
+    expect(GLOBAL.numArray).toEqual([6.2]);
+    expect(GLOBAL.opArray).toEqual([]);
+
+    opInput('+');
+    expect(GLOBAL.numArray).toEqual([6.2]);
+    expect(GLOBAL.opArray).toEqual(['+']);
+  });
+
+  test('disallows operator input after decimal point', () => {
+    numberInput('1');
+    numberInput('2');
+    numberInput('3');
+    decimalInput('.');
+    opInput('-');
+    expect(GLOBAL.numString).toEqual('123.');
+    expect(GLOBAL.opArray).toEqual([]);
+  });
+
+  test('switches operator type if two consecutive ops entered', () => {
+    numberInput('1');
+    numberInput('2');
+    numberInput('3');
+    opInput('-');
+    opInput('+');
+    expect(GLOBAL.numArray).toEqual([123]);
+    expect(GLOBAL.opArray).toEqual(['+']);
+  });
+
+  xtest('uses 0 as default first num if operator is the first input', () => {
+    //DOES NOT PASS, WILL FIX LATER
+    opInput('+');
+    expect(GLOBAL.numArray).toEqual([0]);
+    expect(GLOBAL.opArray).toEqual(['+']);
   });
 });
 

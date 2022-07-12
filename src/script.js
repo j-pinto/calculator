@@ -125,6 +125,30 @@ function decimalInput(input) {
   GLOBAL.numString += input;
 }
 
+function opInput(input) {
+  if (GLOBAL.numString.slice(-1) === '.' || GLOBAL.error) {
+    return;
+  }
+
+  // if using previous answer as input
+  if (GLOBAL.numArray.length === 1 && GLOBAL.opArray.length === 0) {
+    GLOBAL.numString = '0';
+  } else if (GLOBAL.numString !== '0') {
+    GLOBAL.numArray.push(Number(GLOBAL.numString));
+    GLOBAL.numString = '0';
+  }
+
+  // if changing op type
+  if (
+    GLOBAL.numArray.length === GLOBAL.opArray.length &&
+    GLOBAL.opArray.length > 0
+  ) {
+    GLOBAL.opArray.pop();
+  }
+
+  GLOBAL.opArray.push(input);
+}
+
 function keyboardListener() {
   window.addEventListener('keydown', (e) => {
     if (Number(e.key) >= 0 && Number(e.key) <= 9) {
@@ -137,7 +161,7 @@ function keyboardListener() {
       e.key === '*' ||
       e.key === '/'
     ) {
-      // opInput()
+      opInput(e.key);
     } else if (e.key === '=' || e.key === 'Enter') {
       // attemptExecute()
     } else if (
@@ -159,4 +183,5 @@ export {
   keyboardListener,
   numberInput,
   decimalInput,
+  opInput,
 };
