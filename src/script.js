@@ -125,22 +125,26 @@ function decimalInput(input) {
   GLOBAL.numString += input;
 }
 
+function numberRecord() {
+  // uses previous answer if op entered directly after execute
+  if (GLOBAL.numArray.length === 1 && GLOBAL.opArray.length === 0) {
+    GLOBAL.numString = '';
+    // uses zero as default number when op entry before any number entered
+  } else if (GLOBAL.numString === '' && GLOBAL.opArray.length === 0) {
+    GLOBAL.numArray.push(0);
+    // standard number record
+  } else if (GLOBAL.numString !== '') {
+    GLOBAL.numArray.push(Number(GLOBAL.numString));
+    GLOBAL.numString = '';
+  }
+}
+
 function opInput(input) {
   if (GLOBAL.numString.slice(-1) === '.' || GLOBAL.error) {
     return;
   }
 
-  // if using previous answer as input
-  if (GLOBAL.numArray.length === 1 && GLOBAL.opArray.length === 0) {
-    GLOBAL.numString = '';
-    // else if using current numString
-  } else if (GLOBAL.numString !== '') {
-    GLOBAL.numArray.push(Number(GLOBAL.numString));
-    GLOBAL.numString = '';
-    // else if using zero as default number when op entry occurs first
-  } else if (GLOBAL.numString === '' && GLOBAL.opArray.length === 0) {
-    GLOBAL.numArray.push(0);
-  }
+  numberRecord();
 
   // if changing op type
   if (
