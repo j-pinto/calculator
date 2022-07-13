@@ -51,21 +51,19 @@ describe('displayFormat function', () => {
 
 describe('execute function', () => {
   test('follows order of operations to get correct answer', () => {
-    let numArray = [1, 2, 3, 4, 5];
-    let opArray = ['+', '*', '-', '/'];
-    let result = execute(numArray, opArray);
-    expect(result).toEqual(6.2);
-    expect(numArray).toEqual([6.2]);
-    expect(opArray).toEqual([]);
+    GLOBAL.numArray = [1, 2, 3, 4, 5];
+    GLOBAL.opArray = ['+', '*', '-', '/'];
+    execute();
+    expect(GLOBAL.numArray).toEqual([6.2]);
+    expect(GLOBAL.opArray).toEqual([]);
   });
 
   test('breaks early when encountering divide by zero', () => {
-    let numArray = [1, 2, 0, 4, 5];
-    let opArray = ['+', '/', '-', '*'];
-    let result = execute(numArray, opArray);
-    expect(result).toEqual(undefined);
-    expect(numArray).toEqual([1, undefined, 4, 5]);
-    expect(opArray).toEqual(['+', '-', '*']);
+    GLOBAL.numArray = [1, 2, 0, 4, 5];
+    GLOBAL.opArray = ['+', '/', '-', '*'];
+    execute();
+    expect(GLOBAL.numArray).toEqual([1, undefined, 4, 5]);
+    expect(GLOBAL.opArray).toEqual(['+', '-', '*']);
   });
 });
 
@@ -132,8 +130,7 @@ describe('operator input', () => {
   test('uses previous answer as first number if available', () => {
     GLOBAL.numArray = [1, 2, 3, 4, 5];
     GLOBAL.opArray = ['+', '*', '-', '/'];
-    let result = execute(GLOBAL.numArray, GLOBAL.opArray);
-    expect(result).toEqual(6.2);
+    execute();
     expect(GLOBAL.numArray).toEqual([6.2]);
     expect(GLOBAL.opArray).toEqual([]);
 

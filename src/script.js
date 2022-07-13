@@ -49,24 +49,23 @@ function operate(num1, num2, operator) {
   return result;
 }
 
-function execute(numArray, opArray) {
+function execute() {
   for (let offset = 0; offset <= 2; offset += 2) {
     const op1 = OP_NAMES[0 + offset];
     const op2 = OP_NAMES[1 + offset];
-    while (opArray.some((op) => op === op1 || op === op2)) {
-      const index = opArray.findIndex((op) => op === op1 || op === op2);
-      const operator = opArray[index];
-      const num1 = numArray[index];
-      const num2 = numArray[index + 1];
+    while (GLOBAL.opArray.some((op) => op === op1 || op === op2)) {
+      const index = GLOBAL.opArray.findIndex((op) => op === op1 || op === op2);
+      const operator = GLOBAL.opArray[index];
+      const num1 = GLOBAL.numArray[index];
+      const num2 = GLOBAL.numArray[index + 1];
       const result = operate(num1, num2, operator);
-      opArray.splice(index, 1);
-      numArray.splice(index, 2, result);
+      GLOBAL.opArray.splice(index, 1);
+      GLOBAL.numArray.splice(index, 2, result);
       if (result === undefined) {
-        return numArray[index];
+        return;
       }
     }
   }
-  return numArray[0];
 }
 
 function displayFormat(result) {
@@ -162,7 +161,7 @@ function attemptExecute() {
     GLOBAL.numArray.length === GLOBAL.opArray.length + 1 &&
     GLOBAL.opArray.length >= 1
   ) {
-    execute(GLOBAL.numArray, GLOBAL.opArray);
+    execute();
   }
 }
 
