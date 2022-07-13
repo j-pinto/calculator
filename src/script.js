@@ -157,6 +157,15 @@ function opInput(input) {
   GLOBAL.opArray.push(input);
 }
 
+function attemptExecute() {
+  if (
+    GLOBAL.numArray.length === GLOBAL.opArray.length + 1 &&
+    GLOBAL.opArray.length >= 1
+  ) {
+    execute(GLOBAL.numArray, GLOBAL.opArray);
+  }
+}
+
 function keyboardListener() {
   window.addEventListener('keydown', (e) => {
     if (Number(e.key) >= 0 && Number(e.key) <= 9) {
@@ -171,7 +180,7 @@ function keyboardListener() {
     ) {
       opInput(e.key);
     } else if (e.key === '=' || e.key === 'Enter') {
-      // attemptExecute()
+      attemptExecute();
     } else if (
       e.key === 'Backspace' ||
       e.key === 'Delete' ||
