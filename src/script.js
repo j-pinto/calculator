@@ -161,6 +161,7 @@ function attemptExecute() {
     GLOBAL.numArray.length === GLOBAL.opArray.length + 1 &&
     GLOBAL.opArray.length >= 1
   ) {
+    numberRecord();
     execute();
   }
 }
