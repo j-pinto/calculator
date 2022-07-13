@@ -10,14 +10,14 @@ import {
 } from './script.js';
 
 beforeEach(() => {
-  GLOBAL.numString = '0';
+  GLOBAL.numString = '';
   GLOBAL.numArray = [];
   GLOBAL.opArray = [];
   GLOBAL.error = false;
 });
 
 afterEach(() => {
-  GLOBAL.numString = '0';
+  GLOBAL.numString = '';
   GLOBAL.numArray = [];
   GLOBAL.opArray = [];
   GLOBAL.error = false;
