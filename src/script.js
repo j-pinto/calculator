@@ -2,18 +2,9 @@ import './style.css';
 
 const GLOBAL = {
   numString: '0',
-  opString: '',
   numArray: [],
   opArray: [],
-  lastNum: undefined,
-  lastOp: undefined,
   error: false,
-  isOpEntry: false,
-  isDecimalEntry: false,
-  isAlreadyDecimal: false,
-  usingPreviousAnswer: false,
-  usedCE: false,
-  alreadyClearedAll: false,
 };
 
 const INPUT_DIGIT_LIMIT = 9;
