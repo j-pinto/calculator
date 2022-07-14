@@ -83,11 +83,6 @@ function displayFormat(result) {
 function showResult(result) {
   const displayString = `${result}`;
   document.getElementById('display').innerHTML = displayString;
-  GLOBAL.opArray = [];
-  GLOBAL.isDecimalEntry = false;
-  GLOBAL.isAlreadyDecimal = false;
-  GLOBAL.usingPreviousAnswer = true;
-  GLOBAL.usedCE = true;
 }
 
 function numberInput(input) {
