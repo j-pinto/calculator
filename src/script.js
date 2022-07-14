@@ -41,20 +41,29 @@ function operate(num1, num2, operator) {
 }
 
 function execute() {
-  for (let offset = 0; offset <= 2; offset += 2) {
-    const op1 = OP_NAMES[0 + offset];
-    const op2 = OP_NAMES[1 + offset];
-    while (GLOBAL.opArray.some((op) => op === op1 || op === op2)) {
-      const index = GLOBAL.opArray.findIndex((op) => op === op1 || op === op2);
-      const operator = GLOBAL.opArray[index];
-      const num1 = GLOBAL.numArray[index];
-      const num2 = GLOBAL.numArray[index + 1];
-      const result = operate(num1, num2, operator);
-      GLOBAL.opArray.splice(index, 1);
-      GLOBAL.numArray.splice(index, 2, result);
-      if (result === undefined) {
-        return;
-      }
+  while (GLOBAL.opArray.some((op) => op === '*' || op === '/')) {
+    const index = GLOBAL.opArray.findIndex((op) => op === '*' || op === '/');
+    const operator = GLOBAL.opArray[index];
+    const num1 = GLOBAL.numArray[index];
+    const num2 = GLOBAL.numArray[index + 1];
+    const result = operate(num1, num2, operator);
+    GLOBAL.opArray.splice(index, 1);
+    GLOBAL.numArray.splice(index, 2, result);
+    if (result === undefined) {
+      return;
+    }
+  }
+
+  while (GLOBAL.opArray.some((op) => op === '+' || op === '-')) {
+    const index = GLOBAL.opArray.findIndex((op) => op === '+' || op === '-');
+    const operator = GLOBAL.opArray[index];
+    const num1 = GLOBAL.numArray[index];
+    const num2 = GLOBAL.numArray[index + 1];
+    const result = operate(num1, num2, operator);
+    GLOBAL.opArray.splice(index, 1);
+    GLOBAL.numArray.splice(index, 2, result);
+    if (result === undefined) {
+      return;
     }
   }
 }
