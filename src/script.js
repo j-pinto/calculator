@@ -1,7 +1,7 @@
 import './style.css';
 
 const GLOBAL = {
-  numString: '0',
+  numString: '',
   numArray: [],
   opArray: [],
   error: false,
