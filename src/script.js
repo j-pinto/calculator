@@ -10,7 +10,6 @@ const GLOBAL = {
 const INPUT_DIGIT_LIMIT = 9;
 const STD_NOTATION_MIN = 0.000000001;
 const STD_NOTATION_MAX = 1000000000;
-const OP_NAMES = ['*', '/', '+', '-'];
 
 function operate(num1, num2, operator) {
   let result;
