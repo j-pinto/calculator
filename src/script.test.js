@@ -190,13 +190,17 @@ describe('clear function', () => {
 });
 
 describe('full execution loop, with keyboard listener', () => {
+  let event0 = new KeyboardEvent('keydown', { key: '0' });
+  let event1 = new KeyboardEvent('keydown', { key: '1' });
+  let event2 = new KeyboardEvent('keydown', { key: '2' });
+  let event3 = new KeyboardEvent('keydown', { key: '3' });
+  let eventDec = new KeyboardEvent('keydown', { key: '.' });
+  let eventPlus = new KeyboardEvent('keydown', { key: '+' });
+  let eventMinus = new KeyboardEvent('keydown', { key: '-' });
+  let eventMul = new KeyboardEvent('keydown', { key: '*' });
+  let eventDiv = new KeyboardEvent('keydown', { key: '/' });
+  let eventEnter = new KeyboardEvent('keydown', { key: 'Enter' });
   test('simple operation', () => {
-    let event1 = new KeyboardEvent('keydown', { key: '1' });
-    let event2 = new KeyboardEvent('keydown', { key: '2' });
-    let event3 = new KeyboardEvent('keydown', { key: '3' });
-    let eventPlus = new KeyboardEvent('keydown', { key: '+' });
-    let eventEnter = new KeyboardEvent('keydown', { key: 'Enter' });
-
     keyboardListener();
     window.dispatchEvent(event1);
     window.dispatchEvent(event2);
