@@ -189,16 +189,24 @@ describe('clear function', () => {
   });
 });
 
-describe('keyboard listener', () => {
-  test('keyboard number input', () => {
+describe('full execution loop, with keyboard listener', () => {
+  test('simple operation', () => {
     let event1 = new KeyboardEvent('keydown', { key: '1' });
-    let event2 = new KeyboardEvent('keydown', { key: '.' });
+    let event2 = new KeyboardEvent('keydown', { key: '2' });
+    let event3 = new KeyboardEvent('keydown', { key: '3' });
+    let eventPlus = new KeyboardEvent('keydown', { key: '+' });
+    let eventEnter = new KeyboardEvent('keydown', { key: 'Enter' });
+
     keyboardListener();
     window.dispatchEvent(event1);
     window.dispatchEvent(event2);
-    for (let i = 0; i < 8; i++) {
-      window.dispatchEvent(event1);
-    }
-    expect(GLOBAL.numString).toEqual('1.11111111');
+    window.dispatchEvent(event3);
+    window.dispatchEvent(eventPlus);
+    window.dispatchEvent(event1);
+    window.dispatchEvent(event2);
+    window.dispatchEvent(event3);
+    window.dispatchEvent(eventEnter);
+
+    expect(GLOBAL.numArray).toEqual([246]);
   });
 });
