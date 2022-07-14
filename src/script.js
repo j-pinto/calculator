@@ -166,6 +166,17 @@ function attemptExecute() {
   }
 }
 
+function clear() {
+  // clear all
+  if (GLOBAL.numString === '') {
+    GLOBAL.numArray = [];
+    GLOBAL.opArray = [];
+  }
+
+  // clear entry
+  GLOBAL.numString = '';
+}
+
 function keyboardListener() {
   window.addEventListener('keydown', (e) => {
     if (Number(e.key) >= 0 && Number(e.key) <= 9) {
@@ -186,7 +197,7 @@ function keyboardListener() {
       e.key === 'Delete' ||
       e.key === 'Escape'
     ) {
-      // clear()
+      clear();
     }
   });
 }
@@ -201,4 +212,5 @@ export {
   numberInput,
   decimalInput,
   opInput,
+  clear,
 };

@@ -7,6 +7,7 @@ import {
   numberInput,
   decimalInput,
   opInput,
+  clear,
 } from './script.js';
 
 beforeEach(() => {
@@ -163,6 +164,28 @@ describe('operator input', () => {
     opInput('+');
     expect(GLOBAL.numArray).toEqual([0]);
     expect(GLOBAL.opArray).toEqual(['+']);
+  });
+});
+
+describe('clear function', () => {
+  test('clears only number being entered', () => {
+    GLOBAL.numArray = [123];
+    GLOBAL.opArray = ['+'];
+    GLOBAL.numString = '456';
+    clear();
+    expect(GLOBAL.numArray).toEqual([123]);
+    expect(GLOBAL.opArray).toEqual(['+']);
+    expect(GLOBAL.numString).toEqual('');
+  });
+
+  test('clears all if no number being entered', () => {
+    GLOBAL.numArray = [123];
+    GLOBAL.opArray = ['+'];
+    GLOBAL.numString = '';
+    clear();
+    expect(GLOBAL.numArray).toEqual([]);
+    expect(GLOBAL.opArray).toEqual([]);
+    expect(GLOBAL.numString).toEqual('');
   });
 });
 
