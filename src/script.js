@@ -157,7 +157,7 @@ function opInput(input) {
 
 function attemptExecute() {
   if (
-    GLOBAL.numArray.length === GLOBAL.opArray.length + 1 &&
+    GLOBAL.numArray.length === GLOBAL.opArray.length &&
     GLOBAL.opArray.length >= 1
   ) {
     numberRecord();
