@@ -16,6 +16,7 @@ function operate(num1, num2, operator) {
   if (operator === '+') {
     result = num1 + num2;
   } else if (operator === '-') {
+    console.log(num1, num2, operator);
     result = num1 - num2;
   } else if (operator === '*') {
     result = num1 * num2;
@@ -29,7 +30,7 @@ function operate(num1, num2, operator) {
   }
 
   if (
-    Math.abs(result) <= Number.MIN_VALUE ||
+    (result !== 0 && Math.abs(result) <= Number.MIN_VALUE) ||
     Math.abs(result) >= Number.MAX_VALUE
   ) {
     GLOBAL.error = true;
@@ -58,7 +59,9 @@ function execute() {
     const operator = GLOBAL.opArray[index];
     const num1 = GLOBAL.numArray[index];
     const num2 = GLOBAL.numArray[index + 1];
+    console.log(num1, num2, operator);
     const result = operate(num1, num2, operator);
+    console.log(result);
     GLOBAL.opArray.splice(index, 1);
     GLOBAL.numArray.splice(index, 2, result);
     if (result === undefined) {
@@ -127,6 +130,7 @@ function numberRecord() {
     GLOBAL.numArray.push(0);
     // standard number record
   } else if (GLOBAL.numString !== '') {
+    console.log(GLOBAL.numString);
     GLOBAL.numArray.push(Number(GLOBAL.numString));
     GLOBAL.numString = '';
   }
@@ -146,7 +150,7 @@ function opInput(input) {
   ) {
     GLOBAL.opArray.pop();
   }
-
+  console.log(input);
   GLOBAL.opArray.push(input);
 }
 
