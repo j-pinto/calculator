@@ -200,6 +200,7 @@ describe('full execution loop, with keyboard listener', () => {
   let eventMul = new KeyboardEvent('keydown', { key: '*' });
   let eventDiv = new KeyboardEvent('keydown', { key: '/' });
   let eventEnter = new KeyboardEvent('keydown', { key: 'Enter' });
+
   test('simple operation', () => {
     keyboardListener();
     window.dispatchEvent(event1);
@@ -212,5 +213,17 @@ describe('full execution loop, with keyboard listener', () => {
     window.dispatchEvent(eventEnter);
 
     expect(GLOBAL.numArray).toEqual([246]);
+  });
+
+  test('string of operations', () => {
+    keyboardListener();
+    window.dispatchEvent(event1);
+    window.dispatchEvent(eventPlus);
+    window.dispatchEvent(event2);
+    window.dispatchEvent(eventMinus);
+    window.dispatchEvent(event3);
+    window.dispatchEvent(eventEnter);
+
+    expect(GLOBAL.numArray).toEqual([0]);
   });
 });
