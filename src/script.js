@@ -119,6 +119,10 @@ function decimalInput(input) {
     return;
   }
 
+  if (GLOBAL.numString === '') {
+    GLOBAL.numString = '0';
+  }
+
   GLOBAL.numString += input;
 }
 

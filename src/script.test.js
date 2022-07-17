@@ -24,7 +24,7 @@ afterEach(() => {
   GLOBAL.error = false;
 });
 
-describe('operate function', () => {
+xdescribe('operate function', () => {
   test('verify basic operations are working', () => {
     expect(operate(1, 2, '+')).toEqual(3);
     expect(operate(3, 4, '-')).toEqual(-1);
@@ -39,7 +39,7 @@ describe('operate function', () => {
   });
 });
 
-describe('displayFormat function', () => {
+xdescribe('displayFormat function', () => {
   test('formats results to 9 digits of precision', () => {
     GLOBAL.numArray = [123456789.1];
     expect(displayFormat()).toEqual(123456789);
@@ -58,7 +58,7 @@ describe('displayFormat function', () => {
   });
 });
 
-describe('execute function', () => {
+xdescribe('execute function', () => {
   test('follows order of operations to get correct answer', () => {
     GLOBAL.numArray = [1, 2, 3, 4, 5];
     GLOBAL.opArray = ['+', '*', '-', '/'];
@@ -76,7 +76,7 @@ describe('execute function', () => {
   });
 });
 
-describe('number input', () => {
+xdescribe('number input', () => {
   test('basic num input', () => {
     numberInput('1');
     numberInput('2');
@@ -94,15 +94,17 @@ describe('number input', () => {
 });
 
 describe('decimal input', () => {
-  afterEach(() => {
-    GLOBAL.numString = '0';
-  });
-
   test('basic decimal input', () => {
     numberInput('1');
     decimalInput('.');
     numberInput('2');
     expect(GLOBAL.numString).toEqual('1.2');
+  });
+
+  test('adds zero before decimal automatically', () => {
+    decimalInput('.');
+    numberInput('1');
+    expect(GLOBAL.numString).toEqual('0.1');
   });
 
   test('allows 10 characters in numString if decimal', () => {
@@ -124,7 +126,7 @@ describe('decimal input', () => {
   });
 });
 
-describe('operator input', () => {
+xdescribe('operator input', () => {
   test('allows alternating number and operator inputs', () => {
     numberInput('1');
     opInput('+');
@@ -175,7 +177,7 @@ describe('operator input', () => {
   });
 });
 
-describe('clear function', () => {
+xdescribe('clear function', () => {
   test('clears only number being entered', () => {
     GLOBAL.numArray = [123];
     GLOBAL.opArray = ['+'];
@@ -197,7 +199,7 @@ describe('clear function', () => {
   });
 });
 
-describe('full execution loop, with keyboard listener', () => {
+xdescribe('full execution loop, with keyboard listener', () => {
   let event0 = new KeyboardEvent('keydown', { key: '0' });
   let event1 = new KeyboardEvent('keydown', { key: '1' });
   let event2 = new KeyboardEvent('keydown', { key: '2' });
@@ -209,7 +211,7 @@ describe('full execution loop, with keyboard listener', () => {
   let eventDiv = new KeyboardEvent('keydown', { key: '/' });
   let eventEnter = new KeyboardEvent('keydown', { key: 'Enter' });
 
-  test('simple operation', () => {
+  xtest('simple operation', () => {
     keyboardListener();
     window.dispatchEvent(event1);
     window.dispatchEvent(event2);
@@ -223,7 +225,7 @@ describe('full execution loop, with keyboard listener', () => {
     expect(GLOBAL.numArray).toEqual([246]);
   });
 
-  test('string of operations', () => {
+  xtest('string of operations', () => {
     keyboardListener();
     window.dispatchEvent(event1);
     window.dispatchEvent(eventPlus);
