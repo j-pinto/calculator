@@ -16,7 +16,6 @@ function operate(num1, num2, operator) {
   if (operator === '+') {
     result = num1 + num2;
   } else if (operator === '-') {
-    console.log(num1, num2, operator);
     result = num1 - num2;
   } else if (operator === '*') {
     result = num1 * num2;
@@ -59,9 +58,7 @@ function execute() {
     const operator = GLOBAL.opArray[index];
     const num1 = GLOBAL.numArray[index];
     const num2 = GLOBAL.numArray[index + 1];
-    console.log(num1, num2, operator);
     const result = operate(num1, num2, operator);
-    console.log(result);
     GLOBAL.opArray.splice(index, 1);
     GLOBAL.numArray.splice(index, 2, result);
     if (result === undefined) {
@@ -70,11 +67,15 @@ function execute() {
   }
 }
 
-function displayFormat(result) {
+function displayFormat() {
   let formattedResultString;
-  if (result === undefined) {
+  if (GLOBAL.numArray.includes(undefined)) {
     formattedResultString = 'Error';
-  } else if (result >= STD_NOTATION_MAX || result < STD_NOTATION_MIN) {
+    return formattedResultString;
+  }
+
+  const result = GLOBAL.numArray[0];
+  if (result >= STD_NOTATION_MAX || result < STD_NOTATION_MIN) {
     formattedResultString = parseFloat(result.toPrecision(9)).toExponential(2);
   } else {
     formattedResultString = parseFloat(result.toPrecision(9));
@@ -130,7 +131,6 @@ function numberRecord() {
     GLOBAL.numArray.push(0);
     // standard number record
   } else if (GLOBAL.numString !== '') {
-    console.log(GLOBAL.numString);
     GLOBAL.numArray.push(Number(GLOBAL.numString));
     GLOBAL.numString = '';
   }
@@ -150,7 +150,6 @@ function opInput(input) {
   ) {
     GLOBAL.opArray.pop();
   }
-  console.log(input);
   GLOBAL.opArray.push(input);
 }
 

@@ -41,12 +41,20 @@ describe('operate function', () => {
 
 describe('displayFormat function', () => {
   test('formats results to 9 digits of precision', () => {
-    expect(displayFormat(123456789.1)).toEqual(123456789);
+    GLOBAL.numArray = [123456789.1];
+    expect(displayFormat()).toEqual(123456789);
   });
 
   test('formats very large and very small numbers to exponential', () => {
-    expect(displayFormat(1234567890)).toEqual('1.23e+9');
-    expect(displayFormat(0.00000000099999999)).toEqual('1.00e-9');
+    GLOBAL.numArray = [1234567890];
+    expect(displayFormat()).toEqual('1.23e+9');
+    GLOBAL.numArray = [0.00000000099999999];
+    expect(displayFormat()).toEqual('1.00e-9');
+  });
+
+  test('displays error when numArray contains undefined', () => {
+    GLOBAL.numArray = [1, 2, undefined, 3];
+    expect(displayFormat()).toEqual('Error');
   });
 });
 
