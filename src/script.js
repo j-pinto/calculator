@@ -91,8 +91,17 @@ function showResult(result) {
 
 function numberInput(input) {
   if (
+    !GLOBAL.numString.startsWith('0') &&
     GLOBAL.numString.includes('.') &&
     GLOBAL.numString.length >= INPUT_DIGIT_LIMIT + 1
+  ) {
+    return;
+  }
+
+  if (
+    GLOBAL.numString.startsWith('0') &&
+    GLOBAL.numString.includes('.') &&
+    GLOBAL.numString.length >= INPUT_DIGIT_LIMIT + 2
   ) {
     return;
   }

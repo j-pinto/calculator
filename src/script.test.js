@@ -116,6 +116,16 @@ describe('decimal input', () => {
     expect(GLOBAL.numString).toEqual('11111111.9');
   });
 
+  test("allows 11 characters if numString starts with '0.'", () => {
+    numberInput('0');
+    decimalInput('.');
+    for (let i = 0; i < 8; i++) {
+      numberInput('0');
+    }
+    numberInput('1');
+    expect(GLOBAL.numString).toEqual('0.000000001');
+  });
+
   test('disallows second decimal point', () => {
     numberInput('1');
     decimalInput('.');
